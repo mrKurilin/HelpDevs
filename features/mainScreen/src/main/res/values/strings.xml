@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">HelpDevs</string>
+
+    <string name="list_is_empty">Список пуст!\nСпасибо за помощь!</string>
+    <string name="can_be_installed">Можно установить</string>
+    <string name="can_be_deleted">Можно удалить</string>
+    <string name="all_apps">Все приложения</string>
+    <string name="installed_icon_description">Приложение установлено</string>
+    <string name="can_be_deleted_icon_description">Отметить приложение как доступное для удаления</string>
+    <string name="can_be_installed_icon_description">Отметить приложение как доступное для установки</string>
+    <string name="info">Информация</string>
+    <string name="ok">Ок</string>
+</resources>

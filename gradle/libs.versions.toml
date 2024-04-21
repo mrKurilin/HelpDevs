@@ -1,0 +1,110 @@
+[versions]
+coreKtx = "1.13.0"
+coreSplashscreen = "1.0.1"
+flexbox = "3.0.0"
+kotlin = "1.9.23"
+appcompat = "1.6.1"
+agp = "8.3.2"
+ktor = "2.3.7"
+coroutines = "1.7.3"
+lifecycle = "2.7.0"
+navigation = "2.7.7"
+compose = "1.6.6"
+composeCompiler = "1.5.12"
+legacy-support-v4 = "1.0.0"
+lifecycle-livedata-ktx = "2.7.0"
+kotlinSerialization = "1.6.1"
+ksp = "1.9.23-1.0.20"
+dagger = "2.51.1"
+retrofit = "2.9.0"
+room = "2.6.1"
+jsoup = "1.14.3"
+glide = "4.16.0"
+activityCompose = "1.9.0"
+junit = "4.13.2"
+
+[libraries]
+androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+core-ktx-1_9_0 = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+coreSplashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
+kotlinGradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+
+ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+
+coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version.ref = "coroutines" }
+
+coreKtx = { group = "androidx.core", name = "core-ktx", version = "coreKtx" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.6.1" }
+material = { group = "com.google.android.material", name = "material", version = "1.11.0" }
+constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.1.4" }
+
+viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+viewModelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycleRuntimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycleCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+fragmentKtx = { group = "androidx.fragment", name = "fragment-ktx", version = "1.6.2" }
+lifecycleExtensions = { group = "androidx.lifecycle", name = "lifecycle-extensions", version = "2.2.0" }
+
+navigationFragmentKtx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
+uiKtx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+safeArgsGradlePlugin = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidJunit = { group = "androidx.test.ext", name = "junit", version = "1.1.5" }
+espressoCore = { group = "androidx.test.espresso", name = "espresso-core", version = "3.5.1" }
+mockk = { group = "io.mockk", name = "mockk", version = "1.13.7" }
+coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+turbine = { group = "app.cash.turbine", name = "turbine", version = "1.0.0" }
+
+composeUi = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
+uiTooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
+composeMaterial = { group = "androidx.compose.material", name = "material", version.ref = "compose" }
+material3 = { group = "androidx.compose.material3", name = "material3", version = "1.2.1" }
+preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
+composeRuntime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose" }
+compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
+activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+statusbar = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version = "0.30.1" }
+legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacy-support-v4" }
+lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle-livedata-ktx" }
+
+kotlinSerializationCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinSerialization" }
+kotlinSerializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
+kotlinSerializationPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
+
+kspGradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+
+dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
+daggerCompiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
+
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+okHttp = { group = "com.squareup.okhttp3", name = "okhttp", version = "5.0.0-alpha.11" }
+loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version = "4.11.0" }
+serializer = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version = "0.8.0" }
+scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
+
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+
+room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+roomKtx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+roomCompiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
+
+[bundles]
+ktor = ["ktor-okhttp", "ktor-negotiation", "ktor-serialization", "ktor-logging"]
+tests = ["junit", "mockk", "coroutinesTest", "turbine"]
+androidTests = ["androidJunit", "espressoCore"]
+compose = ["uiTooling", "composeMaterial", "material3", "preview", "composeRuntime", "compiler", "activityCompose", "statusbar", "composeUi"]
+network = ["retrofit", "okHttp", "loggingInterceptor", "serializer", "scalars"]
+
+[plugins]
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+navSafeArgsPlugin = { id = "androidx.navigation.safeargs.kotlin" }
+kspPlugin = { id = "com.google.devtools.ksp", version = "1.9.23-1.0.20" }

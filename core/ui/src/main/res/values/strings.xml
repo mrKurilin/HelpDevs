@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="masked_phone_number">+7 (%1$s%2$s%3$s) %4$s%5$s%6$s-%7$s%8$s-%9$s%10$s</string>
+</resources>

@@ -57,9 +57,12 @@ class AppsRepository @Inject constructor(
 
             val appearanceDate = localAppModel.appearanceDate ?: currentDate.time
 
+            val canBeDeleted =
+                localAppModel.canBeDeleted || remoteAppModel.canBeDeleted || isInstalledForTwoWeeks
+
             appsDao.add(
                 localAppModel.copy(
-                    canBeDeleted = remoteAppModel.canBeDeleted || isInstalledForTwoWeeks,
+                    canBeDeleted = canBeDeleted,
                     isInstalled = isRemoteAppInstalled,
                     appearanceDate = appearanceDate,
                     installDate = installDate,

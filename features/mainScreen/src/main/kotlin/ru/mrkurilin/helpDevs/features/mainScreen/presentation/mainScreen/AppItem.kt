@@ -7,7 +7,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,7 +42,7 @@ fun AppItem(
         modifier = Modifier
             .fillMaxWidth()
             .border(BorderStroke(2.dp, Color.Blue), RoundedCornerShape(8.dp))
-            .padding(4.dp)
+            .padding(8.dp)
             .clickable {
                 context.startActivity(webIntent)
             },
@@ -52,8 +51,6 @@ fun AppItem(
         Column(
             modifier = Modifier
                 .weight(1f),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = appModel.appName,
@@ -90,7 +87,7 @@ fun AppItem(
 fun AppItemPreview() {
     AppItem(
         appModel = AppModel(
-            appName = "ru.mrKurilin.helpDevs.data.local.AppModel",
+            appName = "appName",
             appId = "com.example.com",
             appLink = "",
             canBeDeleted = false,

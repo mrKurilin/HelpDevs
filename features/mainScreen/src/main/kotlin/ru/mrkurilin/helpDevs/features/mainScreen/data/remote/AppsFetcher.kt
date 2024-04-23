@@ -14,7 +14,13 @@ import java.util.Locale
 import javax.inject.Inject
 
 private const val GOOGLE_SHEETS_LINK = "https://docs.google.com/spreadsheets/d/1mWzPRzr_H480l3s_U8gp7Imh6AuTkHYCMGxNB9qC5EI"
-private const val VALID_APP_LINK_PREFIX = "https://play.google.com/store/apps/details?id="
+
+private const val VALID_GOOGLE_PLAY_LINK_PREFIX = "https://play.google.com/store/apps/details?id="
+
+private val validAppLinkPrefixes = listOf(
+    VALID_GOOGLE_PLAY_LINK_PREFIX,
+    "https://play.google.com/apps/testing/"
+)
 
 @AppScope
 class AppsFetcher @Inject constructor(
@@ -64,11 +70,13 @@ class AppsFetcher @Inject constructor(
                 currentDate = currentDate,
             )
 
+            val appId = getAppId(appLink)
+            val validAppLink = VALID_GOOGLE_PLAY_LINK_PREFIX + appId
             appModels.add(
                 AppModel(
                     appName = appName,
-                    appId = appLink.removePrefix(VALID_APP_LINK_PREFIX),
-                    appLink = appLink,
+                    appLink = validAppLink,
+                    appId = appId,
                     canBeDeleted = canBeDeletedAlready,
                     appearanceDate = Date().time
                 )
@@ -76,6 +84,16 @@ class AppsFetcher @Inject constructor(
         }
 
         return appModels
+    }
+
+    private fun getAppId(appLink: String): String {
+        validAppLinkPrefixes.forEach { validAppLinkPrefix ->
+            if (appLink.startsWith(validAppLinkPrefix)) {
+                return appLink.removePrefix(validAppLinkPrefix)
+            }
+        }
+
+        return ""
     }
 
     private fun getAppModelsCanBeDeleted(
@@ -97,11 +115,13 @@ class AppsFetcher @Inject constructor(
                 return@forEach
             }
 
+            val appId = getAppId(appLink)
+            val validAppLink = VALID_GOOGLE_PLAY_LINK_PREFIX + appId
             appModels.add(
                 AppModel(
                     appName = appName,
-                    appId = appLink.removePrefix(VALID_APP_LINK_PREFIX),
-                    appLink = appLink,
+                    appLink = validAppLink,
+                    appId = appId,
                     canBeDeleted = true,
                     appearanceDate = Date().time
                 )
@@ -166,6 +186,8 @@ class AppsFetcher @Inject constructor(
             return true
         }
 
-        return !appLink.contains(VALID_APP_LINK_PREFIX)
+        return validAppLinkPrefixes.none { validAppLinkPrefix ->
+            appLink.startsWith(validAppLinkPrefix)
+        }
     }
 }

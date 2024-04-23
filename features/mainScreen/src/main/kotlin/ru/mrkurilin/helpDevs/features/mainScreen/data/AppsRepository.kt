@@ -79,7 +79,7 @@ class AppsRepository @Inject constructor(
                     canBeDeleted = canBeDeleted,
                     installDate = installDate,
                 )
-            }
+            }.sortedBy { it.appId }
         }
     }
 

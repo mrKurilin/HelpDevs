@@ -78,7 +78,6 @@ class AppsFetcher @Inject constructor(
                     appLink = validAppLink,
                     appId = appId,
                     canBeDeleted = canBeDeletedAlready,
-                    appearanceDate = Date().time
                 )
             )
         }
@@ -123,7 +122,6 @@ class AppsFetcher @Inject constructor(
                     appLink = validAppLink,
                     appId = appId,
                     canBeDeleted = true,
-                    appearanceDate = Date().time
                 )
             )
         }
@@ -175,7 +173,7 @@ class AppsFetcher @Inject constructor(
     ): Boolean {
         val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         return try {
-            dateFormat.parse(dateString)!! <= currentDate
+            dateFormat.parse(dateString)!! < currentDate
         } catch (e: Exception) {
             false
         }

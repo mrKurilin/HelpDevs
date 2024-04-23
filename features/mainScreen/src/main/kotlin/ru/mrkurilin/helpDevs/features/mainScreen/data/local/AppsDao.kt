@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AppsDao {
 
-    @Query("SELECT * FROM appModel")
+    @Query("SELECT * FROM appModel ORDER BY appId")
     fun getAllApps(): Flow<List<AppModel>>
 
     @Query("SELECT appId FROM appModel")

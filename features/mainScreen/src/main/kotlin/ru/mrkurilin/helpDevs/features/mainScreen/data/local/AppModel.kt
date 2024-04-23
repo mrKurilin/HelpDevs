@@ -8,7 +8,7 @@ data class AppModel(
     @PrimaryKey val appId: String,
     val appName: String,
     val appLink: String,
-    val appearanceDate: Long,
+    val appearanceDate: Long? = null,
     val canBeDeleted: Boolean,
     val installDate: Long? = null,
     val isInstalled: Boolean = false,

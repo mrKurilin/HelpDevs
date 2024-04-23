@@ -3,15 +3,15 @@
 Небольшой проект для отслеживания доступных для установки или удаления приложений,
 выложенных для тестирования из таблицы [Тестировщики Google Play](https://docs.google.com/spreadsheets/d/1mWzPRzr_H480l3s_U8gp7Imh6AuTkHYCMGxNB9qC5EI/edit?usp=sharing)
 
-**Стэк:** Compose, Dagger 2, OkHttp, Flow, ViewModel, Room, Navigation Component
+**Стэк:** Compose, Dagger 2, OkHttp, Flow, Room
 
 ## Установка
-[![APK Download](https://img.shields.io/badge/APK-Download-brightgreen?logo=android)]()
+[![APK Download](https://img.shields.io/badge/APK-Download-brightgreen?logo=android)](https://github.com/mrKurilin/HelpDevs/releases/download/HelpDevs_1.0.0/HelpDevs_1.0.0.apk)
 
 ## Скриншоты
 <p float="left">
-    <img src="" width="250"> 
-    <img src="" width="250"> 
-    <img src="" width="250"> 
-    <img src="" width="250"> 
+    <img src="https://github.com/mrKurilin/HelpDevs/blob/main/screenshots/apps_to_install.jpg" width="250"> 
+    <img src="https://github.com/mrKurilin/HelpDevs/blob/main/screenshots/apps_to_delete.jpg" width="250"> 
+    <img src="https://github.com/mrKurilin/HelpDevs/blob/main/screenshots/empty_list.jpg" width="250"> 
+    <img src="https://github.com/mrKurilin/HelpDevs/blob/main/screenshots/info_dialog.jpg" width="250"> 
 </p> 

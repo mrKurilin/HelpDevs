@@ -1,7 +1,8 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.data.remote
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import org.jsoup.Jsoup
-import org.jsoup.select.Elements
 import ru.mrkurilin.helpDevs.di.scopes.AppScope
 import ru.mrkurilin.helpDevs.features.mainScreen.data.GOOGLE_SHEETS_LINK_1
 import ru.mrkurilin.helpDevs.features.mainScreen.data.GOOGLE_SHEETS_LINK_2
@@ -12,6 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 private const val VALID_GOOGLE_PLAY_LINK_PREFIX = "https://play.google.com/store/apps/details?id="
 
@@ -25,24 +27,34 @@ class AppsFetcher @Inject constructor() {
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
-    fun fetchApps(): List<AppModel> {
-        val rows1 = Jsoup.connect(GOOGLE_SHEETS_LINK_1).get().body().select("tr")
+    suspend fun fetchApps(): List<AppModel> {
+        return with(CoroutineScope(coroutineContext)) {
+            val appModelsCanBeInstalled = async {
+                getAppModelsCanBeInstalled()
+            }
+            val appModelsCanBeDeleted1 = async {
+                getAppModelsCanBeDeleted(GOOGLE_SHEETS_LINK_1)
+            }
+            val appModelsCanBeDeleted2 = async {
+                getAppModelsCanBeDeleted(GOOGLE_SHEETS_LINK_2)
+            }
+            val appModelsCanBeDeleted3 = async {
+                getAppModelsCanBeDeleted(GOOGLE_SHEETS_LINK_3)
+            }
 
-        val appModelsCanBeInstalled = getAppModelsCanBeInstalled(rows1)
-        val appModelsCanBeDeleted1 = getAppModelsCanBeDeleted(rows1)
-
-        val rows2 = Jsoup.connect(GOOGLE_SHEETS_LINK_2).get().body().select("tr")
-        val appModelsCanBeDeleted2 = getAppModelsCanBeDeleted(rows2)
-
-        val rows3 = Jsoup.connect(GOOGLE_SHEETS_LINK_3).get().body().select("tr")
-        val appModelsCanBeDeleted3 = getAppModelsCanBeDeleted(rows3)
-
-        return appModelsCanBeInstalled + appModelsCanBeDeleted1 + appModelsCanBeDeleted2 + appModelsCanBeDeleted3
+            mutableListOf<AppModel>().apply {
+                addAll(appModelsCanBeInstalled.await())
+                addAll(appModelsCanBeDeleted1.await())
+                addAll(appModelsCanBeDeleted2.await())
+                addAll(appModelsCanBeDeleted3.await())
+            }
+        }
     }
 
-    private fun getAppModelsCanBeInstalled(rows: Elements): List<AppModel> {
+    private fun getAppModelsCanBeInstalled(): List<AppModel> {
         val appModels = mutableListOf<AppModel>()
         val currentDate = Date()
+        val rows = Jsoup.connect(GOOGLE_SHEETS_LINK_1).get().body().select("tr")
 
         rows.forEach { row ->
             val columns = row.select("td")
@@ -62,6 +74,29 @@ class AppsFetcher @Inject constructor() {
                 appName = columns[3].getTextValue(),
                 appLink = columns[4].getTextValue(),
                 canBeDeleted = canBeDeletedAlready,
+            )?.let { appModel ->
+                appModels.add(appModel)
+            }
+        }
+
+        return appModels
+    }
+
+    private fun getAppModelsCanBeDeleted(url: String): List<AppModel> {
+        val appModels = mutableListOf<AppModel>()
+        val rows = Jsoup.connect(url).get().body().select("tr")
+
+        rows.forEach { row ->
+            val columns = row.select("td")
+
+            if (columns.size < 2) {
+                return@forEach
+            }
+
+            getAppModel(
+                appName = columns[0].getTextValue(),
+                appLink = columns[1].getTextValue(),
+                canBeDeleted = true,
             )?.let { appModel ->
                 appModels.add(appModel)
             }
@@ -100,27 +135,5 @@ class AppsFetcher @Inject constructor() {
         }
 
         return ""
-    }
-
-    private fun getAppModelsCanBeDeleted(rows: Elements): List<AppModel> {
-        val appModels = mutableListOf<AppModel>()
-
-        rows.forEach { row ->
-            val columns = row.select("td")
-
-            if (columns.size < 2) {
-                return@forEach
-            }
-
-            getAppModel(
-                appName = columns[0].getTextValue(),
-                appLink = columns[1].getTextValue(),
-                canBeDeleted = true,
-            )?.let { appModel ->
-                appModels.add(appModel)
-            }
-        }
-
-        return appModels
     }
 }

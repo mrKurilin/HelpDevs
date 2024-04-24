@@ -1,19 +1,17 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.data.remote
 
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import ru.mrkurilin.helpDevs.di.scopes.AppScope
+import ru.mrkurilin.helpDevs.features.mainScreen.data.GOOGLE_SHEETS_LINK_1
+import ru.mrkurilin.helpDevs.features.mainScreen.data.GOOGLE_SHEETS_LINK_2
+import ru.mrkurilin.helpDevs.features.mainScreen.data.GOOGLE_SHEETS_LINK_3
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppModel
-import java.io.IOException
+import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.getTextValue
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
-
-private const val GOOGLE_SHEETS_LINK = "https://docs.google.com/spreadsheets/d/1mWzPRzr_H480l3s_U8gp7Imh6AuTkHYCMGxNB9qC5EI"
 
 private const val VALID_GOOGLE_PLAY_LINK_PREFIX = "https://play.google.com/store/apps/details?id="
 
@@ -23,68 +21,75 @@ private val validAppLinkPrefixes = listOf(
 )
 
 @AppScope
-class AppsFetcher @Inject constructor(
-    private val okHttpClient: OkHttpClient,
-) {
+class AppsFetcher @Inject constructor() {
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     fun fetchApps(): List<AppModel> {
-        val currentDate = Date()
-        val doc = Jsoup.parse(getTablesHtml())
-        val tables = doc.select("table")
+        val rows1 = Jsoup.connect(GOOGLE_SHEETS_LINK_1).get().body().select("tr")
 
-        if (tables.size < 2) {
-            return emptyList()
-        }
+        val appModelsCanBeInstalled = getAppModelsCanBeInstalled(rows1)
+        val appModelsCanBeDeleted1 = getAppModelsCanBeDeleted(rows1)
 
-        return getAppModelsCanBeInstalled(
-            rows = tables[0].select("tbody").select("tr"),
-            currentDate = currentDate,
-        ) + getAppModelsCanBeDeleted(
-            rows = tables[1].select("tbody").select("tr"),
-        )
+        val rows2 = Jsoup.connect(GOOGLE_SHEETS_LINK_2).get().body().select("tr")
+        val appModelsCanBeDeleted2 = getAppModelsCanBeDeleted(rows2)
+
+        val rows3 = Jsoup.connect(GOOGLE_SHEETS_LINK_3).get().body().select("tr")
+        val appModelsCanBeDeleted3 = getAppModelsCanBeDeleted(rows3)
+
+        return appModelsCanBeInstalled + appModelsCanBeDeleted1 + appModelsCanBeDeleted2 + appModelsCanBeDeleted3
     }
 
-    private fun getAppModelsCanBeInstalled(
-        rows: Elements,
-        currentDate: Date,
-    ): List<AppModel> {
+    private fun getAppModelsCanBeInstalled(rows: Elements): List<AppModel> {
         val appModels = mutableListOf<AppModel>()
+        val currentDate = Date()
 
         rows.forEach { row ->
-            val cells = row.select("td")
+            val columns = row.select("td")
 
-            if (cells.size < 8) {
+            if (columns.size < 7) {
                 return@forEach
             }
 
-            val appName = cells[5].getValue().removePrefix("\n").trim()
-
-            val appLink = cells[6].getValue().trim()
-            if (isAppLinkNotValid(appLink)) {
-                return@forEach
+            val date = columns[6].getTextValue()
+            val canBeDeletedAlready = try {
+                Date(dateFormat.parse(date)!!.time + 24 * 60 * 60 * 1000) < currentDate
+            } catch (e: Exception) {
+                false
             }
 
-            val date = cells[7].getValue().trim()
-            val canBeDeletedAlready = canBeDeletedAlready(
-                deleteDateString = date,
-                currentDate = currentDate,
-            )
-
-            val appId = getAppId(appLink)
-            val validAppLink = VALID_GOOGLE_PLAY_LINK_PREFIX + appId
-            appModels.add(
-                AppModel(
-                    appName = appName,
-                    appLink = validAppLink,
-                    appId = appId,
-                    canBeDeleted = canBeDeletedAlready,
-                )
-            )
+            getAppModel(
+                appName = columns[3].getTextValue(),
+                appLink = columns[4].getTextValue(),
+                canBeDeleted = canBeDeletedAlready,
+            )?.let { appModel ->
+                appModels.add(appModel)
+            }
         }
 
         return appModels
+    }
+
+    private fun getAppModel(
+        appName: String,
+        appLink: String,
+        canBeDeleted: Boolean,
+    ): AppModel? {
+        if (validAppLinkPrefixes.none { validAppLinkPrefix ->
+                appLink.startsWith(validAppLinkPrefix)
+            }) {
+            return null
+        }
+
+        val appId = getAppId(appLink)
+        val validAppLink = VALID_GOOGLE_PLAY_LINK_PREFIX + appId
+
+        return AppModel(
+            appName = appName,
+            appLink = validAppLink,
+            appId = appId,
+            canBeDeleted = canBeDeleted,
+        )
     }
 
     private fun getAppId(appLink: String): String {
@@ -97,100 +102,25 @@ class AppsFetcher @Inject constructor(
         return ""
     }
 
-    private fun getAppModelsCanBeDeleted(
-        rows: Elements,
-    ): List<AppModel> {
+    private fun getAppModelsCanBeDeleted(rows: Elements): List<AppModel> {
         val appModels = mutableListOf<AppModel>()
 
         rows.forEach { row ->
-            val cells = row.select("td")
+            val columns = row.select("td")
 
-            if (cells.size < 4) {
+            if (columns.size < 2) {
                 return@forEach
             }
 
-            val appName = cells[2].getValue().removePrefix("\n").trim()
-            val appLink = cells[3].getValue().trim()
-
-            if (isAppLinkNotValid(appLink)) {
-                return@forEach
+            getAppModel(
+                appName = columns[0].getTextValue(),
+                appLink = columns[1].getTextValue(),
+                canBeDeleted = true,
+            )?.let { appModel ->
+                appModels.add(appModel)
             }
-
-            val appId = getAppId(appLink)
-            val validAppLink = VALID_GOOGLE_PLAY_LINK_PREFIX + appId
-            appModels.add(
-                AppModel(
-                    appName = appName,
-                    appLink = validAppLink,
-                    appId = appId,
-                    canBeDeleted = true,
-                )
-            )
         }
 
         return appModels
-    }
-
-    private fun getTablesHtml(): String {
-        val request = Request.Builder()
-            .url(GOOGLE_SHEETS_LINK)
-            .build()
-
-        return try {
-            val response = okHttpClient.newCall(request).execute()
-            if (response.isSuccessful) {
-                response.body()?.string() ?: ""
-            } else {
-                ""
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            ""
-        }
-    }
-
-    private fun Element.getValue(): String {
-        val childNodes: List<org.jsoup.nodes.Node> = childNodes()
-
-        if (childNodes.isEmpty()) {
-            return ""
-        }
-
-        val firstChildNote = childNodes.first()
-
-        if (firstChildNote is org.jsoup.nodes.TextNode) {
-            return firstChildNote.toString()
-        }
-
-        if (firstChildNote is Element) {
-            return firstChildNote.getValue()
-        }
-
-        return ""
-    }
-
-    private fun canBeDeletedAlready(
-        deleteDateString: String,
-        currentDate: Date,
-    ): Boolean {
-        return try {
-            val safeDeleteDate = Date(
-                dateFormat.parse(deleteDateString)!!.time + 24 * 60 * 60 * 1000
-            )
-
-            safeDeleteDate < currentDate
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    private fun isAppLinkNotValid(appLink: String): Boolean {
-        if (appLink.isBlank()) {
-            return true
-        }
-
-        return validAppLinkPrefixes.none { validAppLinkPrefix ->
-            appLink.startsWith(validAppLinkPrefix)
-        }
     }
 }

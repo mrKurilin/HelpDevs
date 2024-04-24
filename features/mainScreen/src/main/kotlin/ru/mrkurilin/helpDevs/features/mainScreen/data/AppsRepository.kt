@@ -25,10 +25,10 @@ class AppsRepository @Inject constructor(
         val localAppIds = appsDao.getAllAppIds()
 
         remoteApps.forEach { remoteAppModel ->
-            val isRemoteAppInstalled = isAppInstalledUseCase(remoteAppModel.appId)
+            val isAppInstalled = isAppInstalledUseCase(remoteAppModel.appId)
             val isSavedLocal = localAppIds.contains(remoteAppModel.appId)
 
-            if (remoteAppModel.canBeDeleted && !isRemoteAppInstalled && !isSavedLocal) {
+            if (remoteAppModel.canBeDeleted && !isAppInstalled && !isSavedLocal) {
                 return@forEach
             }
 
@@ -38,7 +38,7 @@ class AppsRepository @Inject constructor(
                 appsDao.add(
                     remoteAppModel.copy(
                         canBeDeleted = remoteAppModel.canBeDeleted,
-                        isInstalled = isRemoteAppInstalled,
+                        isInstalled = isAppInstalled,
                         appearanceDate = currentDate.time,
                     )
                 )
@@ -46,7 +46,7 @@ class AppsRepository @Inject constructor(
 
             val localAppModel = appsDao.getAppModelById(remoteAppModel.appId)
 
-            val installDate = if (localAppModel.installDate == null && isRemoteAppInstalled) {
+            val installDate = if (localAppModel.installDate == null && isAppInstalled) {
                 currentDate.time
             } else localAppModel.installDate
 
@@ -63,7 +63,7 @@ class AppsRepository @Inject constructor(
             appsDao.add(
                 localAppModel.copy(
                     canBeDeleted = canBeDeleted,
-                    isInstalled = isRemoteAppInstalled,
+                    isInstalled = isAppInstalled,
                     appearanceDate = appearanceDate,
                     installDate = installDate,
                 )

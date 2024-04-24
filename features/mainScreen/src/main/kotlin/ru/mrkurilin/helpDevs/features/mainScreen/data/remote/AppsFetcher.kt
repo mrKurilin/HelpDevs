@@ -27,6 +27,8 @@ class AppsFetcher @Inject constructor(
     private val okHttpClient: OkHttpClient,
 ) {
 
+    private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+
     fun fetchApps(): List<AppModel> {
         val currentDate = Date()
         val doc = Jsoup.parse(getTablesHtml())
@@ -66,7 +68,7 @@ class AppsFetcher @Inject constructor(
 
             val date = cells[7].getValue().trim()
             val canBeDeletedAlready = canBeDeletedAlready(
-                dateString = date,
+                deleteDateString = date,
                 currentDate = currentDate,
             )
 
@@ -168,12 +170,15 @@ class AppsFetcher @Inject constructor(
     }
 
     private fun canBeDeletedAlready(
-        dateString: String,
+        deleteDateString: String,
         currentDate: Date,
     ): Boolean {
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         return try {
-            dateFormat.parse(dateString)!! < currentDate
+            val safeDeleteDate = Date(
+                dateFormat.parse(deleteDateString)!!.time + 24 * 60 * 60 * 1000
+            )
+
+            safeDeleteDate < currentDate
         } catch (e: Exception) {
             false
         }

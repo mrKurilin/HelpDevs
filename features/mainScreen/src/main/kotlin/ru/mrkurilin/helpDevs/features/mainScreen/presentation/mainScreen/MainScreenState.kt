@@ -7,6 +7,5 @@ data class MainScreenState(
     val idsToInstall: List<AppModel> = listOf(),
     val idsToDelete: List<AppModel> = listOf(),
     val allIds: List<AppModel> = listOf(),
-    val installedIds: List<AppModel> = listOf(),
     val showInfo: Boolean = false,
 )

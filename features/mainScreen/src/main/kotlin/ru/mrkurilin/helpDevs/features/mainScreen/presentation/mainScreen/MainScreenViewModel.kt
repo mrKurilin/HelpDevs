@@ -23,9 +23,8 @@ class MainScreenViewModel @Inject constructor(
                 _state.update { currentState ->
                     currentState.copy(
                         allIds = appModels,
-                        idsToInstall = appModels.filter { !it.canBeDeleted && it.installDate == null },
-                        idsToDelete = appModels.filter { it.canBeDeleted && it.installDate != null },
-                        installedIds = appModels.filter { it.isInstalled },
+                        idsToInstall = appModels.filter { !it.canBeDeleted && !it.isInstalled },
+                        idsToDelete = appModels.filter { it.canBeDeleted && it.isInstalled },
                         isLoading = false,
                     )
                 }

@@ -6,7 +6,6 @@ import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppModel
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppsDao
 import ru.mrkurilin.helpDevs.features.mainScreen.data.remote.AppsFetcher
 import java.util.Date
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AppScope
@@ -50,15 +49,9 @@ class AppsRepository @Inject constructor(
                 currentDate.time
             } else localAppModel.installDate
 
-            val isInstalledForTwoWeeks = isInstalledForTwoWeeks(
-                installDate,
-                currentDate.time
-            )
-
             val appearanceDate = localAppModel.appearanceDate ?: currentDate.time
 
-            val canBeDeleted =
-                localAppModel.canBeDeleted || remoteAppModel.canBeDeleted || isInstalledForTwoWeeks
+            val canBeDeleted = localAppModel.canBeDeleted || remoteAppModel.canBeDeleted
 
             appsDao.add(
                 localAppModel.copy(
@@ -69,22 +62,6 @@ class AppsRepository @Inject constructor(
                 )
             )
         }
-    }
-
-    private fun isInstalledForTwoWeeks(
-        installDateTime: Long?,
-        currentDateTime: Long,
-    ): Boolean {
-        if (installDateTime == null) {
-            return false
-        }
-
-        val diffInMillisec: Long = currentDateTime - installDateTime
-
-        val diffInDays: Long = TimeUnit.MILLISECONDS.toDays(diffInMillisec)
-
-        return diffInDays > 14
-
     }
 
     suspend fun changeCanBeDeleted(appId: String) {

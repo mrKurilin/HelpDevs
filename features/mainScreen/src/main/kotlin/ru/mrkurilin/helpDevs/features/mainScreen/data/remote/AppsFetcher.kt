@@ -4,9 +4,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import org.jsoup.Jsoup
 import ru.mrkurilin.helpDevs.di.scopes.AppScope
-import ru.mrkurilin.helpDevs.features.mainScreen.data.GOOGLE_SHEETS_LINK_1
-import ru.mrkurilin.helpDevs.features.mainScreen.data.GOOGLE_SHEETS_LINK_2
-import ru.mrkurilin.helpDevs.features.mainScreen.data.GOOGLE_SHEETS_LINK_3
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppModel
 import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.getTextValue
 import java.text.SimpleDateFormat
@@ -14,6 +11,13 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
+
+const val GOOGLE_SHEETS_LINK_1 =
+    "https://docs.google.com/spreadsheets/d/17hPaWcE07hKxRRadfUU-R5dz-LBp8JQV9Mpct7J1-uw"
+const val GOOGLE_SHEETS_LINK_2 =
+    "https://docs.google.com/spreadsheets/d/1tfd7bTi9oFo3r3PR8Gomw9lHlD_NYxUsVvMO3X_mQCo"
+const val GOOGLE_SHEETS_LINK_3 =
+    "https://docs.google.com/spreadsheets/d/1UChAxIBu1v4lFtsy2Hl7jeNn_ylGWOBRv9D39QuLyMA"
 
 private const val VALID_GOOGLE_PLAY_LINK_PREFIX = "https://play.google.com/store/apps/details?id="
 

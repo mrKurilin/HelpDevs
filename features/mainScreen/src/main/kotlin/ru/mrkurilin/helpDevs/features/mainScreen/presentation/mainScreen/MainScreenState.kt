@@ -7,5 +7,6 @@ data class MainScreenState(
     val appsToInstall: List<AppUiModel> = listOf(),
     val appsToDelete: List<AppUiModel> = listOf(),
     val allApps: List<AppUiModel> = listOf(),
-    val showInfo: Boolean = false,
+    val showInfoDialog: Boolean = false,
+    val showAddAppDialog: Boolean = false,
 )

@@ -1,28 +1,25 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,23 +29,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.infoDialog.InfoDialog
-import ru.mrkurilin.helpDevs.mainScreen.R
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components.AddAppDialog
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components.AppItem
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components.EmptyListHolder
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components.InfoDialog
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components.MainScreenTopBar
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
     stateFlow: StateFlow<MainScreenState>,
     updateData: () -> Unit,
     changeCanBeDeleted: (appId: String) -> Unit,
-    toggleInfoDialog: () -> Unit,
+    toggleInfoDialogVisibility: () -> Unit,
+    toggleAddAppDialogVisibility: () -> Unit,
+    onAddAppClicked: (appLink: String) -> Unit,
 ) {
     val tabs = MainScreenTabs.entries
 
@@ -63,38 +63,36 @@ fun MainScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(stringResource(id = tabs[selectedTabIndex].titleId))
-                },
-                actions = {
-                    IconButton(onClick = { toggleInfoDialog() }) {
-                        Icon(imageVector = Icons.Filled.Info, contentDescription = null)
-                    }
-                },
+            MainScreenTopBar(
+                title = stringResource(id = tabs[selectedTabIndex].titleId),
+                toggleInfoDialogVisibility = toggleInfoDialogVisibility,
             )
         },
         bottomBar = {
-            TabRow(
+            MainScreenTopBar(
                 selectedTabIndex = selectedTabIndex,
+                tabs = tabs,
+                onTabSelected = { tabPosition ->
+                    selectedTabIndex = tabPosition
+                }
+            )
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = selectedTabIndex == 0,
+                enter = fadeIn(),
+                exit = fadeOut(),
             ) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        modifier = Modifier.height(48.dp),
-                        selected = selectedTabIndex == index,
-                        onClick = {
-                            selectedTabIndex = index
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(id = tab.titleId),
-                            fontSize = 11.sp,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
+                FloatingActionButton(
+                    modifier = Modifier.size(48.dp),
+                    shape = CircleShape,
+                    onClick = toggleAddAppDialogVisibility,
+                ) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "icon")
                 }
             }
         },
+        floatingActionButtonPosition = FabPosition.End,
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -102,12 +100,6 @@ fun MainScreen(
                 .padding(paddingValues)
                 .pullRefresh(pullRefreshState)
         ) {
-            if (state.showInfo) {
-                InfoDialog(
-                    toggleInfoDialog = toggleInfoDialog
-                )
-            }
-
             LazyColumn(
                 modifier = Modifier
                     .padding(8.dp)
@@ -122,23 +114,7 @@ fun MainScreen(
 
                 if (selectedTabList.isEmpty()) {
                     item {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            Image(
-                                painterResource(R.drawable.android_phone),
-                                contentDescription = "",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            Text(
-                                text = stringResource(R.string.list_is_empty),
-                                textAlign = TextAlign.Center,
-                            )
-                        }
+                        EmptyListHolder()
                     }
                 }
 
@@ -150,6 +126,19 @@ fun MainScreen(
                 }
             }
 
+            if (state.showInfoDialog) {
+                InfoDialog(
+                    toggleInfoDialog = toggleInfoDialogVisibility,
+                )
+            }
+
+            if (state.showAddAppDialog) {
+                AddAppDialog(
+                    onDismissRequest = toggleAddAppDialogVisibility,
+                    onAddAppClicked = onAddAppClicked,
+                )
+            }
+
             PullRefreshIndicator(
                 refreshing = state.isLoading,
                 state = pullRefreshState,
@@ -158,4 +147,17 @@ fun MainScreen(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun MainScreenPreview() {
+    MainScreen(
+        stateFlow = MutableStateFlow(MainScreenState()),
+        updateData = {},
+        changeCanBeDeleted = {},
+        toggleAddAppDialogVisibility = {},
+        toggleInfoDialogVisibility = {},
+        onAddAppClicked = {},
+    )
 }

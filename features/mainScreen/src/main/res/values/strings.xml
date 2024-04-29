@@ -10,4 +10,7 @@
     <string name="can_be_installed_icon_description">Отметить приложение как доступное для установки</string>
     <string name="info">Информация</string>
     <string name="ok">Ок</string>
+    <string name="dismiss">Отмена</string>
+    <string name="add_app">Добавить приложение</string>
+    <string name="app_link">Ссылка на приложение</string>
 </resources>

@@ -4,7 +4,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import org.jsoup.Jsoup
 import ru.mrkurilin.helpDevs.di.scopes.AppScope
+import ru.mrkurilin.helpDevs.features.mainScreen.data.VALID_GOOGLE_PLAY_LINK_PREFIX
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppModel
+import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetAppIdFromLink
 import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.getTextValue
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -19,15 +21,10 @@ const val GOOGLE_SHEETS_LINK_2 =
 const val GOOGLE_SHEETS_LINK_3 =
     "https://docs.google.com/spreadsheets/d/1UChAxIBu1v4lFtsy2Hl7jeNn_ylGWOBRv9D39QuLyMA"
 
-private const val VALID_GOOGLE_PLAY_LINK_PREFIX = "https://play.google.com/store/apps/details?id="
-
-private val validAppLinkPrefixes = listOf(
-    VALID_GOOGLE_PLAY_LINK_PREFIX,
-    "https://play.google.com/apps/testing/"
-)
-
 @AppScope
-class AppsFetcher @Inject constructor() {
+class AppsFetcher @Inject constructor(
+    private val getAppIdFromLink: GetAppIdFromLink,
+) {
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
@@ -114,13 +111,8 @@ class AppsFetcher @Inject constructor() {
         appLink: String,
         canBeDeleted: Boolean,
     ): AppModel? {
-        if (validAppLinkPrefixes.none { validAppLinkPrefix ->
-                appLink.startsWith(validAppLinkPrefix)
-            }) {
-            return null
-        }
+        val appId = getAppIdFromLink(appLink) ?: return null
 
-        val appId = getAppId(appLink)
         val validAppLink = VALID_GOOGLE_PLAY_LINK_PREFIX + appId
 
         return AppModel(
@@ -129,15 +121,5 @@ class AppsFetcher @Inject constructor() {
             appId = appId,
             canBeDeleted = canBeDeleted,
         )
-    }
-
-    private fun getAppId(appLink: String): String {
-        validAppLinkPrefixes.forEach { validAppLinkPrefix ->
-            if (appLink.startsWith(validAppLinkPrefix)) {
-                return appLink.removePrefix(validAppLinkPrefix)
-            }
-        }
-
-        return ""
     }
 }

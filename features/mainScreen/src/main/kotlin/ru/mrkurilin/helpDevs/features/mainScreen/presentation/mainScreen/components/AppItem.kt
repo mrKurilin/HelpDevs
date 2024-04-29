@@ -1,4 +1,4 @@
-package ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen
+package ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components
 
 import android.content.Intent
 import android.net.Uri

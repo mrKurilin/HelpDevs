@@ -13,11 +13,14 @@ interface AppsDao {
     @Query("SELECT * FROM appModel ORDER BY appId COLLATE NOCASE ASC")
     fun getAllApps(): Flow<List<AppModel>>
 
+    @Query("SELECT * FROM appModel WHERE appName LIKE :appName")
+    fun getAllAppsByName(appName: String): List<AppModel>
+
     @Query("SELECT appId FROM appModel")
     fun getAllAppIds(): List<String>
 
     @Query("SELECT * FROM appModel WHERE appId LIKE :appId")
-    suspend fun getAppModelById(appId: String): AppModel
+    suspend fun getAppModelById(appId: String): AppModel?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun add(appModel: AppModel)

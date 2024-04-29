@@ -1,4 +1,4 @@
-package ru.mrkurilin.helpDevs.features.mainScreen.presentation.infoDialog
+package ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

@@ -36,20 +36,17 @@ class AppsRepository @Inject constructor(
             if (!isSavedLocal) {
                 appsDao.add(
                     remoteAppModel.copy(
-                        canBeDeleted = remoteAppModel.canBeDeleted,
                         isInstalled = isAppInstalled,
-                        appearanceDate = currentDate.time,
+                        installDate = if (isAppInstalled) currentDate.time else  null,
                     )
                 )
             }
 
             val localAppModel = appsDao.getAppModelById(remoteAppModel.appId)
 
-            val installDate = if (localAppModel.installDate == null && isAppInstalled) {
+            val installDate = if (isAppInstalled && localAppModel.installDate == null) {
                 currentDate.time
             } else localAppModel.installDate
-
-            val appearanceDate = localAppModel.appearanceDate ?: currentDate.time
 
             val canBeDeleted = localAppModel.canBeDeleted || remoteAppModel.canBeDeleted
 
@@ -57,7 +54,6 @@ class AppsRepository @Inject constructor(
                 localAppModel.copy(
                     canBeDeleted = canBeDeleted,
                     isInstalled = isAppInstalled,
-                    appearanceDate = appearanceDate,
                     installDate = installDate,
                 )
             )

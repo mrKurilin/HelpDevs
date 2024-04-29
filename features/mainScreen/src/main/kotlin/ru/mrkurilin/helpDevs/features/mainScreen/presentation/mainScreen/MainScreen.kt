@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -19,6 +17,8 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -115,9 +115,9 @@ fun MainScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 val selectedTabList = when (tabs[selectedTabIndex]) {
-                    MainScreenTabs.CAN_BE_INSTALLED -> state.idsToInstall
-                    MainScreenTabs.CAN_BE_DELETED -> state.idsToDelete
-                    MainScreenTabs.ALL_APPS -> state.allIds
+                    MainScreenTabs.CAN_BE_INSTALLED -> state.appsToInstall
+                    MainScreenTabs.CAN_BE_DELETED -> state.appsToDelete
+                    MainScreenTabs.ALL_APPS -> state.allApps
                 }
 
                 if (selectedTabList.isEmpty()) {
@@ -144,7 +144,7 @@ fun MainScreen(
 
                 items(selectedTabList.size) { index ->
                     AppItem(
-                        appModel = selectedTabList[index],
+                        appUiModel = selectedTabList[index],
                         changeCanBeDeleted = changeCanBeDeleted
                     )
                 }

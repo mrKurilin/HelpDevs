@@ -24,19 +24,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppModel
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppUiModel
+import ru.mrkurilin.helpDevs.mainScreen.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppItem(
-    appModel: AppModel,
+    appUiModel: AppUiModel,
     changeCanBeDeleted: (appId: String) -> Unit,
 ) {
     val context = LocalContext.current
-    val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(appModel.appLink))
+    val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(appUiModel.appLink))
 
     Row(
         modifier = Modifier
@@ -53,25 +55,35 @@ fun AppItem(
                 .weight(1f),
         ) {
             Text(
-                text = appModel.appName,
+                text = appUiModel.appName,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.basicMarquee(),
             )
             Text(
-                text = appModel.appId,
+                text = appUiModel.appId,
                 modifier = Modifier.basicMarquee(),
             )
+            if (appUiModel.isInstalled) {
+                Text(
+                    text = pluralStringResource(
+                        R.plurals.installed_days,
+                        appUiModel.appInstalledDurationDays,
+                        appUiModel.appInstalledDurationDays
+                    ),
+                    modifier = Modifier.basicMarquee(),
+                )
+            }
         }
 
-        if (appModel.isInstalled) {
+        if (appUiModel.isInstalled) {
             Icon(imageVector = Icons.Rounded.Check, contentDescription = null)
         }
 
         IconButton(
-            onClick = { changeCanBeDeleted(appModel.appId) },
+            onClick = { changeCanBeDeleted(appUiModel.appId) },
         ) {
             Icon(
-                imageVector = if (appModel.canBeDeleted) {
+                imageVector = if (appUiModel.canBeDeleted) {
                     Icons.Rounded.Refresh
                 } else {
                     Icons.Rounded.Delete
@@ -86,12 +98,27 @@ fun AppItem(
 @Composable
 fun AppItemPreview() {
     AppItem(
-        appModel = AppModel(
+        appUiModel = AppUiModel(
             appName = "appName",
             appId = "com.example.com",
             appLink = "",
             canBeDeleted = false,
-            appearanceDate = 0,
+        ),
+        changeCanBeDeleted = { }
+    )
+}
+
+@Preview
+@Composable
+fun AppItemInstalledPreview() {
+    AppItem(
+        appUiModel = AppUiModel(
+            appName = "appName",
+            appId = "com.example.com",
+            appLink = "",
+            isInstalled = true,
+            canBeDeleted = false,
+            appInstalledDurationDays = 4,
         ),
         changeCanBeDeleted = { }
     )

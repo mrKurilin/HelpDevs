@@ -8,10 +8,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.mrkurilin.helpDevs.features.mainScreen.data.AppsRepository
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppUiModelMapper
 import javax.inject.Inject
 
 class MainScreenViewModel @Inject constructor(
     private val appsRepository: AppsRepository,
+    private val appUiModelMapper: AppUiModelMapper,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainScreenState())
@@ -20,11 +22,12 @@ class MainScreenViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             appsRepository.getApps().collect { appModels ->
+                val appUiModels = appModels.map { appUiModelMapper.mapFromAppModel(it) }
                 _state.update { currentState ->
                     currentState.copy(
-                        allIds = appModels,
-                        idsToInstall = appModels.filter { !it.canBeDeleted && !it.isInstalled },
-                        idsToDelete = appModels.filter { it.canBeDeleted && it.isInstalled },
+                        allApps = appUiModels,
+                        appsToInstall = appUiModels.filter { !it.canBeDeleted && !it.isInstalled },
+                        appsToDelete = appUiModels.filter { it.canBeDeleted && it.isInstalled },
                         isLoading = false,
                     )
                 }

@@ -10,7 +10,7 @@ class GetInstalledAppName @Inject constructor(
     private val context: Context,
 ) {
 
-    operator fun invoke(appId: String): String? {
+    operator fun invoke(appId: String): String {
         return try {
             val applicationInfo = context.packageManager.getApplicationInfo(appId, 0)
             if (applicationInfo.nonLocalizedLabel == null) {
@@ -21,7 +21,8 @@ class GetInstalledAppName @Inject constructor(
                 applicationInfo.nonLocalizedLabel.toString()
             }
         } catch (e: Exception) {
-            null
+            e.printStackTrace()
+            ""
         }
     }
 }

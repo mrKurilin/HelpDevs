@@ -5,17 +5,14 @@ import android.content.pm.PackageManager
 import ru.mrkurilin.helpDevs.di.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class IsAppInstalled @Inject constructor(
+class GetInstalledAppIds @Inject constructor(
     @ApplicationContext
     private val context: Context,
 ) {
 
-    operator fun invoke(appId: String): Boolean {
-        return try {
-            context.packageManager.getApplicationInfo(appId, 0)
-            true
-        } catch (e: PackageManager.NameNotFoundException) {
-            false
+    operator fun invoke(): List<String> {
+        return context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA).map {
+            it.packageName
         }
     }
 }

@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 interface AppsDao {
 
     @Query("SELECT * FROM appModel ORDER BY appId COLLATE NOCASE ASC")
-    fun getAllApps(): Flow<List<AppModel>>
+    fun getAllAppsFlow(): Flow<List<AppModel>>
 
-    @Query("SELECT * FROM appModel WHERE appName LIKE :appName")
-    fun getAllAppsByName(appName: String): List<AppModel>
+    @Query("SELECT * FROM appModel")
+    fun getAllAppsList(): List<AppModel>
 
     @Query("SELECT appId FROM appModel")
     fun getAllAppIds(): List<String>

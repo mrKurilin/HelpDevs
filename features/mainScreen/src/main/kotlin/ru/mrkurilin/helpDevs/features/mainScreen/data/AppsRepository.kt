@@ -17,7 +17,7 @@ class AppsRepository @Inject constructor(
     private val appsFetcher: AppsFetcher,
     private val getInstalledAppIds: GetInstalledAppIds,
     private val getAppIdFromLink: GetAppIdFromLink,
-    private val getAppName: GetInstalledAppName,
+    private val getInstalledAppName: GetInstalledAppName,
 ) {
 
     fun getApps(): Flow<List<AppModel>> {
@@ -25,51 +25,53 @@ class AppsRepository @Inject constructor(
     }
 
     suspend fun updateData() {
-        val remoteApps = appsFetcher.fetchApps()
-        val localAppIds = appsDao.getAllAppIds()
         val installedAppIds = getInstalledAppIds()
 
-        remoteApps.forEach { remoteAppModel ->
-            val isAppInstalled = installedAppIds.contains(remoteAppModel.appId)
-            val isSavedLocal = localAppIds.contains(remoteAppModel.appId)
+        addRemoteAppsToDb(
+            installedAppIds = installedAppIds,
+        )
 
-            if (remoteAppModel.canBeDeleted && !isAppInstalled && !isSavedLocal) {
+        updateAppsInfo(
+            installedAppIds = installedAppIds,
+        )
+    }
+
+    private suspend fun addRemoteAppsToDb(installedAppIds: List<String>) {
+        val remoteApps = appsFetcher.fetchApps()
+        val localAppIds = appsDao.getAllAppIds()
+
+        remoteApps.forEach { remoteAppModel ->
+            if (localAppIds.contains(remoteAppModel.appId)) {
                 return@forEach
             }
 
-            val currentDate = Date()
+            val isAppInstalled = installedAppIds.contains(remoteAppModel.appId)
 
-            if (!isSavedLocal) {
-                appsDao.add(
-                    remoteAppModel.copy(
-                        isInstalled = isAppInstalled,
-                        installDate = if (isAppInstalled) currentDate.time else null,
-                    )
-                )
+            if (remoteAppModel.canBeDeleted && !isAppInstalled) {
+                return@forEach
             }
 
-            val localAppModel = appsDao.getAppModelById(remoteAppModel.appId) ?: return@forEach
-
-            val installDate = if (isAppInstalled && localAppModel.installDate == null) {
-                currentDate.time
-            } else localAppModel.installDate
-
-            val canBeDeleted = localAppModel.canBeDeleted || remoteAppModel.canBeDeleted
-
-            appsDao.add(
-                localAppModel.copy(
-                    canBeDeleted = canBeDeleted,
-                    isInstalled = isAppInstalled,
-                    installDate = installDate,
-                )
-            )
+            val appToAdd = remoteAppModel.copy(isInstalled = isAppInstalled)
+            appsDao.add(appToAdd)
         }
+    }
+
+    private suspend fun updateAppsInfo(installedAppIds: List<String>) {
+        val currentDate = Date()
 
         appsDao.getAllAppsList().forEach { appModel ->
             val isAppInstalled = installedAppIds.contains(appModel.appId)
 
-            val appName = appModel.appName.ifEmpty {
-                getAppName(appModel.appName)
+            val appName = if (appModel.appName.isEmpty() && isAppInstalled) {
+                getInstalledAppName(appId = appModel.appId)
+            } else {
+                appModel.appName
+            }
+
+            val installedDate = if (isAppInstalled && appModel.installDate == null) {
+                currentDate.time
+            } else {
+                appModel.installDate
             }
 
             if (appModel.appName != appName || appModel.isInstalled != isAppInstalled) {
@@ -77,6 +79,7 @@ class AppsRepository @Inject constructor(
                     appModel.copy(
                         appName = appName,
                         isInstalled = isAppInstalled,
+                        installDate = installedDate,
                     )
                 )
             }

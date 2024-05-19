@@ -71,7 +71,7 @@ fun AddAppDialog(
                     }
 
                     TextButton(
-                        onClick = { onAddAppClicked(appId) },
+                        onClick = { onAddAppClicked(appId.trim()) },
                     ) {
                         Text(stringResource(id = R.string.ok))
                     }

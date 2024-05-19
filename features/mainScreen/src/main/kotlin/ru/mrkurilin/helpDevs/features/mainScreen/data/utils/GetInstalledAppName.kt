@@ -13,16 +13,20 @@ class GetInstalledAppName @Inject constructor(
     operator fun invoke(appId: String): String {
         return try {
             val applicationInfo = context.packageManager.getApplicationInfo(appId, 0)
-            if (applicationInfo.nonLocalizedLabel == null) {
-                appId.split(".").last().replaceFirstChar {
-                    if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-                }
+            if (applicationInfo.nonLocalizedLabel.isNullOrEmpty()) {
+                getAppNameByAppId(appId)
             } else {
                 applicationInfo.nonLocalizedLabel.toString()
             }
         } catch (e: Exception) {
             e.printStackTrace()
             ""
+        }
+    }
+
+    private fun getAppNameByAppId(appId: String): String {
+        return appId.removeSuffix(".app").split(".").last().replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
         }
     }
 }

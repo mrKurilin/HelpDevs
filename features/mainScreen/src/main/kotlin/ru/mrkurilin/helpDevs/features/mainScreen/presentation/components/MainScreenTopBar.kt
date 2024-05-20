@@ -1,4 +1,4 @@
-package ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components
+package ru.mrkurilin.helpDevs.features.mainScreen.presentation.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info

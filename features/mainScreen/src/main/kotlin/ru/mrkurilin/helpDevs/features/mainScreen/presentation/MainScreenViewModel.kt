@@ -1,4 +1,4 @@
-package ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen
+package ru.mrkurilin.helpDevs.features.mainScreen.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +13,8 @@ import ru.mrkurilin.helpDevs.di.qualifiers.IODispatcher
 import ru.mrkurilin.helpDevs.features.mainScreen.data.AppsRepository
 import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.IsAppLinkValid
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppUiModelMapper
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenEvent
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenState
 import javax.inject.Inject
 
 class MainScreenViewModel @Inject constructor(

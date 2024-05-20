@@ -1,7 +1,7 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.di
 
 import dagger.Subcomponent
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.MainScreenViewModel
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.MainScreenViewModel
 
 @Subcomponent()
 interface MainScreenComponent {

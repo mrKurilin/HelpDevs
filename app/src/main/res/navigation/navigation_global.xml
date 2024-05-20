@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/mainScreenFragment"
-        android:name="ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.MainScreenFragment">
+        android:name="ru.mrkurilin.helpDevs.features.mainScreen.presentation.MainScreenFragment">
     </fragment>
 
 </navigation>

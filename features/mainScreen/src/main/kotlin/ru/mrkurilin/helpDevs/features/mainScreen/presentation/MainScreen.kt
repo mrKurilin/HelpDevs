@@ -1,4 +1,4 @@
-package ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen
+package ru.mrkurilin.helpDevs.features.mainScreen.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -34,11 +34,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components.AddAppDialog
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components.AppItem
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components.EmptyListHolder
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components.InfoDialog
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen.components.MainScreenTopBar
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.AddAppDialog
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.AppItem
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.EmptyListHolder
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.InfoDialog
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.MainScreenTopBar
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenState
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

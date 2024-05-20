@@ -1,4 +1,4 @@
-package ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen
+package ru.mrkurilin.helpDevs.features.mainScreen.presentation.state
 
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppUiModel
 

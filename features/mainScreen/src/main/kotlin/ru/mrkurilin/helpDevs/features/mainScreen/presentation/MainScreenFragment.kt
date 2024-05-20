@@ -1,4 +1,4 @@
-package ru.mrkurilin.helpDevs.features.mainScreen.presentation.mainScreen
+package ru.mrkurilin.helpDevs.features.mainScreen.presentation
 
 import android.content.Intent
 import android.net.Uri
@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import ru.mrkurilin.helpDevs.di.lazyViewModel
 import ru.mrkurilin.helpDevs.di.requireSubComponentsProvider
 import ru.mrkurilin.helpDevs.features.mainScreen.di.MainScreenComponentProvider
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenEvent
 
 class MainScreenFragment : Fragment() {
 

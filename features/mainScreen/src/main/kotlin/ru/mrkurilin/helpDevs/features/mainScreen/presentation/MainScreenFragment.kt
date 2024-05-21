@@ -48,6 +48,7 @@ class MainScreenFragment : Fragment() {
                         toggleInfoDialogVisibility = mainScreenViewModel::toggleInfoDialogVisibility,
                         toggleAddAppDialogVisibility = mainScreenViewModel::toggleAddAppDialogVisibility,
                         onAddAppClicked = mainScreenViewModel::onAddAppClicked,
+                        onTabSelected = mainScreenViewModel::onTabSelected,
                     )
                 }
             }

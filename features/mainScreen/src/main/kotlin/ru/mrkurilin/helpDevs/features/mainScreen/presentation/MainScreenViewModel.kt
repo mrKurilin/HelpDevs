@@ -39,7 +39,6 @@ class MainScreenViewModel @Inject constructor(
                         allApps = appUiModels,
                         appsToInstall = appUiModels.filter { !it.canBeDeleted && !it.isInstalled },
                         appsToDelete = appUiModels.filter { it.canBeDeleted && it.isInstalled },
-                        isLoading = true,
                     )
                 }
             }
@@ -94,6 +93,15 @@ class MainScreenViewModel @Inject constructor(
         viewModelScope.launch(iODispatcher) {
             appsRepository.addApp(appLink)
             events.send(MainScreenEvent.AddedAppToInstall(appLink))
+        }
+    }
+
+    fun onTabSelected(tabIndex: Int) {
+        _state.update {
+            it.copy(
+                selectedTabIndex = tabIndex,
+                selectedTab = MainScreenTabs.entries[tabIndex],
+            )
         }
     }
 }

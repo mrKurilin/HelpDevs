@@ -45,9 +45,13 @@ class MainScreenFragment : Fragment() {
                         stateFlow = mainScreenViewModel.state,
                         updateData = mainScreenViewModel::updateData,
                         changeCanBeDeleted = mainScreenViewModel::changeCanBeDeleted,
-                        toggleInfoDialogVisibility = mainScreenViewModel::toggleInfoDialogVisibility,
-                        toggleAddAppDialogVisibility = mainScreenViewModel::toggleAddAppDialogVisibility,
                         onAddAppClicked = mainScreenViewModel::onAddAppClicked,
+                        onTabSelected = mainScreenViewModel::onTabSelected,
+                        onAppsFilterSelected = mainScreenViewModel::onAppsFilterSelected,
+                        onAppsSortSelected = mainScreenViewModel::onAppsSortSelected,
+                        toggleDialogVisibility = mainScreenViewModel::toggleDialogVisibility,
+                        changeSortDirection = mainScreenViewModel::changeSortDirection,
+                        clearFilters = mainScreenViewModel::clearFilters,
                     )
                 }
             }

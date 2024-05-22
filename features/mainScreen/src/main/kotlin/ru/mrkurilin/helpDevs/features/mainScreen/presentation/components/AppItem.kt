@@ -36,12 +36,13 @@ import ru.mrkurilin.helpDevs.mainScreen.R
 fun AppItem(
     appUiModel: AppUiModel,
     changeCanBeDeleted: (appId: String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(appUiModel.appLink))
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .border(BorderStroke(2.dp, Color.Blue), RoundedCornerShape(8.dp))
             .padding(8.dp)

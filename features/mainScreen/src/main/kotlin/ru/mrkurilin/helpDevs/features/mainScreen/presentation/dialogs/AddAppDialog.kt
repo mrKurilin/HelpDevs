@@ -1,4 +1,4 @@
-package ru.mrkurilin.helpDevs.features.mainScreen.presentation.components
+package ru.mrkurilin.helpDevs.features.mainScreen.presentation.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

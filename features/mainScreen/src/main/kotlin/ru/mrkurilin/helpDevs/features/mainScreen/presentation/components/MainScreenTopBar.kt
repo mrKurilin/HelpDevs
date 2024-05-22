@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 @Composable
 fun MainScreenTopBar(
     title: String,
-    toggleInfoDialogVisibility: () -> Unit,
+    onInfoButtonClick: () -> Unit,
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -23,7 +23,7 @@ fun MainScreenTopBar(
         },
         actions = {
             IconButton(
-                onClick = { toggleInfoDialogVisibility() }
+                onClick = { onInfoButtonClick() }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Info,

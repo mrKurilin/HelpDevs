@@ -1,4 +1,4 @@
-package ru.mrkurilin.helpDevs.features.mainScreen.presentation.components
+package ru.mrkurilin.helpDevs.features.mainScreen.presentation.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.IconDescription
 import ru.mrkurilin.helpDevs.mainScreen.R
 
 @Composable

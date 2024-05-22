@@ -7,4 +7,5 @@ data class AppUiModel(
     val canBeDeleted: Boolean,
     val isInstalled: Boolean = false,
     val appInstalledDurationDays: Int = 0,
+    val installDate: Long? = null,
 )

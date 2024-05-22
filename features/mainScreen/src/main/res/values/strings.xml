@@ -13,4 +13,12 @@
     <string name="dismiss">Отмена</string>
     <string name="add_app">Добавить приложение</string>
     <string name="app_link">Ссылка на приложение</string>
+    <string name="apps_sort">Сортировка приложений</string>
+    <string name="apps_filter">Фильтр приложений</string>
+    <string name="installed">Установленные</string>
+    <string name="uninstalled">Не установленные</string>
+    <string name="by_name">По имени</string>
+    <string name="by_install_date">По дате установки</string>
+    <string name="by_id">По id</string>
+    <string name="by_install_duration">По времени на устройстве</string>
 </resources>

@@ -23,6 +23,7 @@ class AppUiModelMapper @Inject constructor() {
             appLink = appModel.appLink,
             canBeDeleted = appModel.canBeDeleted,
             isInstalled = appModel.isInstalled,
+            installDate = appModel.installDate,
             appInstalledDurationDays = installedDurationDays,
         )
     }

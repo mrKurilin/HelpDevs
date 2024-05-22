@@ -135,6 +135,7 @@ fun MainScreen(
                             onSortClicked = { toggleDialogVisibility(MainScreenDialog.APPS_SORT) },
                             onFilterClicked = { toggleDialogVisibility(MainScreenDialog.APPS_FILTER) },
                             onClearFilterClicked = clearFilters,
+                            isDescendingSort = state.isDescendingSort,
                         )
                     }
                 }

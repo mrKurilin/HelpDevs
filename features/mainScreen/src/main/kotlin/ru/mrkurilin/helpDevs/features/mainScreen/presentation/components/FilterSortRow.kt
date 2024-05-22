@@ -20,6 +20,7 @@ fun FilterSortRow(
     onSortClicked: () -> Unit,
     onFilterClicked: () -> Unit,
     onClearFilterClicked: () -> Unit,
+    isDescendingSort: Boolean = false,
 ) {
 
     Row(
@@ -33,7 +34,13 @@ fun FilterSortRow(
             modifier = Modifier.height(48.dp)
         ) {
             Icon(
-                painterResource(id = R.drawable.sort_to_top),
+                painterResource(
+                    id = if (isDescendingSort) {
+                        R.drawable.sort_to_top
+                    } else {
+                        R.drawable.sort_to_bottom
+                    }
+                ),
                 contentDescription = null
             )
         }

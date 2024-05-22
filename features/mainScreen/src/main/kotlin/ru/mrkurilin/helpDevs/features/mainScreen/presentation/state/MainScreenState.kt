@@ -16,7 +16,7 @@ data class MainScreenState(
     val showAppsFilterDialog: Boolean = false,
     val selectedTabIndex: Int = 0,
     val selectedTab: MainScreenTabs = MainScreenTabs.CAN_BE_INSTALLED,
-    val selectedAppsSort: AppsSort = AppsSort.APP_ID,
+    val selectedAppsSort: AppsSort = AppsSort.INSTALL_DURATION,
     val selectedAppsFilters: List<AppsFilter> = listOf(),
-    val isDescendingSort: Boolean = false,
+    val isDescendingSort: Boolean = true,
 )

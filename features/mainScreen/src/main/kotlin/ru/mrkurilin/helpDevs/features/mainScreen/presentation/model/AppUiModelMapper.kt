@@ -5,7 +5,6 @@ import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-
 class AppUiModelMapper @Inject constructor() {
 
     fun mapFromAppModel(appModel: AppModel): AppUiModel {
@@ -18,7 +17,7 @@ class AppUiModelMapper @Inject constructor() {
         }
 
         return AppUiModel(
-            appId = appModel.appId,
+            appId = appModel.appId.lowercase(),
             appName = appModel.appName,
             appLink = appModel.appLink,
             canBeDeleted = appModel.canBeDeleted,

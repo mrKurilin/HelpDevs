@@ -6,9 +6,10 @@ import javax.inject.Inject
 class GetAppIdFromLink @Inject constructor() {
 
     operator fun invoke(appLink: String): String? {
+        val trimmedAppLink = appLink.trim()
         validAppLinkPrefixes.forEach { validAppLinkPrefix ->
-            if (appLink.startsWith(validAppLinkPrefix)) {
-                return appLink.removePrefix(validAppLinkPrefix)
+            if (trimmedAppLink.startsWith(validAppLinkPrefix)) {
+                return trimmedAppLink.removePrefix(validAppLinkPrefix).split("&").first()
             }
         }
 

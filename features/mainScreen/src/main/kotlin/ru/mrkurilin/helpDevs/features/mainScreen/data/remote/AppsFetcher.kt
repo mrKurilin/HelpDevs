@@ -117,7 +117,7 @@ class AppsFetcher @Inject constructor(
 
         return AppModel(
             appName = appName,
-            appLink = validAppLink,
+            appLink = validAppLink.split("&").first(),
             appId = appId,
             canBeDeleted = canBeDeleted,
         )

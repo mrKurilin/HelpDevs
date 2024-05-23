@@ -2,6 +2,7 @@ package ru.mrkurilin.helpDevs.features.mainScreen.presentation.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -49,9 +50,10 @@ fun AppsSortDialog(
 
                 AppsSort.entries.forEach { appsSort ->
                     CheckedText(
+                        modifier = Modifier.fillMaxWidth(),
                         text = stringResource(id = appsSort.titleId),
                         isChecked = appsSort == selectedAppsSort,
-                        onItemSelected = { onAppsSortSelected(appsSort) }
+                        onItemSelected = { onAppsSortSelected(appsSort) },
                     )
                 }
             }

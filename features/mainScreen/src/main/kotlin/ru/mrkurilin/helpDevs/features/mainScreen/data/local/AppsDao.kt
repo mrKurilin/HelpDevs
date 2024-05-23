@@ -25,6 +25,6 @@ interface AppsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun add(appModel: AppModel)
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(appModel: AppModel)
 }

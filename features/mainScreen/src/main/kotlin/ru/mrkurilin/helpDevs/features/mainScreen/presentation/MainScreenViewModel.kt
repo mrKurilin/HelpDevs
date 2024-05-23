@@ -3,6 +3,7 @@ package ru.mrkurilin.helpDevs.features.mainScreen.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,7 @@ import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppsSort
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenEvent
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenState
 import java.lang.CharSequence.compare
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class MainScreenViewModel @Inject constructor(
@@ -30,6 +32,18 @@ class MainScreenViewModel @Inject constructor(
     @IODispatcher
     private val iODispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
+        viewModelScope.launch {
+            handleException(exception)
+
+            _state.update { currentState ->
+                currentState.copy(
+                    isLoading = false,
+                )
+            }
+        }
+    }
 
     private val _state = MutableStateFlow(MainScreenState())
     val state = _state.asStateFlow()
@@ -53,7 +67,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun updateData() {
-        viewModelScope.launch(iODispatcher) {
+        viewModelScope.launch(iODispatcher + coroutineExceptionHandler) {
             _state.update { currentState ->
                 currentState.copy(
                     isLoading = true,
@@ -173,6 +187,13 @@ class MainScreenViewModel @Inject constructor(
         }
 
         return sortedAndFilteredList
+    }
+
+    private suspend fun handleException(exception: Throwable) {
+        when (exception) {
+            is UnknownHostException -> events.send(MainScreenEvent.InternetConnectionError)
+            else -> events.send(MainScreenEvent.UnknownError)
+        }
     }
 
     private fun Long?.compareTo(o2: Long?): Int {

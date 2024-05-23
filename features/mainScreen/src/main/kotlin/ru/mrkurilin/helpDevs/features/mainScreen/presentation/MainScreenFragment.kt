@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,6 +22,7 @@ import ru.mrkurilin.helpDevs.di.lazyViewModel
 import ru.mrkurilin.helpDevs.di.requireSubComponentsProvider
 import ru.mrkurilin.helpDevs.features.mainScreen.di.MainScreenComponentProvider
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenEvent
+import ru.mrkurilin.helpDevs.mainScreen.R
 
 class MainScreenFragment : Fragment() {
 
@@ -67,6 +69,22 @@ class MainScreenFragment : Fragment() {
                             requireContext().startActivity(
                                 Intent(Intent.ACTION_VIEW, Uri.parse(mainScreenEvent.appLink))
                             )
+                        }
+
+                        MainScreenEvent.InternetConnectionError -> {
+                            Toast.makeText(
+                                requireContext(),
+                                R.string.internet_connection_error,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+
+                        MainScreenEvent.UnknownError -> {
+                            Toast.makeText(
+                                requireContext(),
+                                R.string.unknown_error,
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
                 }

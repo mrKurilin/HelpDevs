@@ -21,4 +21,7 @@
     <string name="by_install_date">По дате установки</string>
     <string name="by_id">По id</string>
     <string name="by_install_duration">По времени на устройстве</string>
+
+    <string name="internet_connection_error">Ошибка сети</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
 </resources>

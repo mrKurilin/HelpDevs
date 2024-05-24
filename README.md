@@ -14,4 +14,5 @@
     <img src="https://github.com/mrKurilin/HelpDevs/blob/main/screenshots/apps_to_delete.jpg" width="250"> 
     <img src="https://github.com/mrKurilin/HelpDevs/blob/main/screenshots/empty_list.jpg" width="250"> 
     <img src="https://github.com/mrKurilin/HelpDevs/blob/main/screenshots/info_dialog.jpg" width="250"> 
+    <img src="https://github.com/mrKurilin/HelpDevs/blob/main/screenshots/all_apps.jpg" width="250"> 
 </p> 

@@ -60,11 +60,11 @@ class AppsFetcher @Inject constructor(
         rows.forEach { row ->
             val columns = row.select("td")
 
-            if (columns.size < 7) {
+            if (columns.size < 6) {
                 return@forEach
             }
 
-            val date = columns[6].getTextValue()
+            val date = columns[5].getTextValue()
             val canBeDeletedAlready = try {
                 Date(dateFormat.parse(date)!!.time + 24 * 60 * 60 * 1000) < currentDate
             } catch (e: Exception) {

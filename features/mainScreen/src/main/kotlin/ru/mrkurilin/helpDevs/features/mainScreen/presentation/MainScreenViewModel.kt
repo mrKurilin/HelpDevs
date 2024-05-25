@@ -26,9 +26,9 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 class MainScreenViewModel @Inject constructor(
+    val isAppLinkValid: IsAppLinkValid,
     private val appsRepository: AppsRepository,
     private val appUiModelMapper: AppUiModelMapper,
-    private val isAppLinkValid: IsAppLinkValid,
     @IODispatcher
     private val iODispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {

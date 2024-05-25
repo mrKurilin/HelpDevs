@@ -12,6 +12,7 @@ fun MainScreenDialogs(
     onAddAppClicked: (String) -> Unit,
     onAppsSortSelected: (AppsSort) -> Unit,
     onAppsFilterSelected: (AppsFilter) -> Unit,
+    isAppLinkValid: (String) -> Boolean,
 ) {
     if (state.showInfoDialog) {
         InfoDialog(
@@ -23,6 +24,7 @@ fun MainScreenDialogs(
         AddAppDialog(
             onDismissRequest = { toggleDialogVisibility(MainScreenDialog.ADD_APP) },
             onAddAppClicked = onAddAppClicked,
+            isAppLinkValid = isAppLinkValid,
         )
     }
 

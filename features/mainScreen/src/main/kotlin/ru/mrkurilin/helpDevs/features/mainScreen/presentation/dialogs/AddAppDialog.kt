@@ -23,18 +23,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.mrkurilin.helpDevs.mainScreen.R
+import ru.mrkurilin.helpDevs.ui.utils.extensions.getTextFromClipboard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddAppDialog(
     onDismissRequest: () -> Unit,
     onAddAppClicked: (String) -> Unit,
+    isAppLinkValid: (String) -> Boolean,
 ) {
-    var appId by remember { mutableStateOf("") }
+    val textFromClipboard = LocalContext.current.getTextFromClipboard()
+
+    var appLink by remember {
+        mutableStateOf(
+            if (isAppLinkValid(textFromClipboard)) {
+                textFromClipboard
+            } else {
+                ""
+            }
+        )
+    }
 
     BasicAlertDialog(onDismissRequest = onDismissRequest) {
         Surface(
@@ -51,9 +64,9 @@ fun AddAppDialog(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 TextField(
-                    value = appId,
+                    value = appLink,
                     onValueChange = {
-                        appId = it
+                        appLink = it
                     },
                     label = { Text(stringResource(id = R.string.app_link)) }
                 )
@@ -71,7 +84,7 @@ fun AddAppDialog(
                     }
 
                     TextButton(
-                        onClick = { onAddAppClicked(appId.trim()) },
+                        onClick = { onAddAppClicked(appLink.trim()) },
                     ) {
                         Text(stringResource(id = R.string.ok))
                     }
@@ -87,5 +100,6 @@ fun AddAppDialogPreview() {
     AddAppDialog(
         onDismissRequest = {},
         onAddAppClicked = {},
+        isAppLinkValid = { false },
     )
 }

@@ -1,4 +1,4 @@
-package ru.mrkurilin.helpDevs.ui.fragmentExtensions
+package ru.mrkurilin.helpDevs.ui.utils.extensions
 
 import android.content.Context
 import android.view.inputmethod.InputMethodManager

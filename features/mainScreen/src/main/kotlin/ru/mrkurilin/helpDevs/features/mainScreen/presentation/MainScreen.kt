@@ -61,6 +61,7 @@ fun MainScreen(
     onAppsFilterSelected: (AppsFilter) -> Unit,
     changeSortDirection: () -> Unit,
     clearFilters: () -> Unit,
+    isAppLinkValid: (String) -> Boolean,
 ) {
     val tabs = MainScreenTabs.entries
 
@@ -166,6 +167,7 @@ fun MainScreen(
                 onAddAppClicked = onAddAppClicked,
                 onAppsSortSelected = onAppsSortSelected,
                 onAppsFilterSelected = onAppsFilterSelected,
+                isAppLinkValid = isAppLinkValid,
             )
 
             PullRefreshIndicator(
@@ -191,6 +193,7 @@ fun MainScreenPreview() {
         onAppsFilterSelected = {},
         toggleDialogVisibility = {},
         changeSortDirection = {},
-        clearFilters = {}
+        clearFilters = {},
+        isAppLinkValid = { false },
     )
 }

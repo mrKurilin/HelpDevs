@@ -54,6 +54,9 @@ class MainScreenFragment : Fragment() {
                         toggleDialogVisibility = mainScreenViewModel::toggleDialogVisibility,
                         changeSortDirection = mainScreenViewModel::changeSortDirection,
                         clearFilters = mainScreenViewModel::clearFilters,
+                        isAppLinkValid = { appLink ->
+                            mainScreenViewModel.isAppLinkValid(appLink)
+                        },
                     )
                 }
             }

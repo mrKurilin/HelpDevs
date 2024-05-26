@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -43,7 +43,6 @@ import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.FilterS
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.MainScreenTopBar
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.dialogs.MainScreenDialog
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.dialogs.MainScreenDialogs
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppUiModel
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppsFilter
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppsSort
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenState
@@ -147,11 +146,12 @@ fun MainScreen(
                     }
                 }
 
-                items(
+                itemsIndexed(
                     items = selectedTabList,
-                    key = { it.appId }
-                ) { appUiModel: AppUiModel ->
+                    key = { _, appUiModel -> appUiModel.appId }
+                ) { index, appUiModel ->
                     AppItem(
+                        position = index + 1,
                         modifier = Modifier.animateItemPlacement(
                             animationSpec = tween(durationMillis = 600)
                         ),

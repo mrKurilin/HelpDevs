@@ -34,6 +34,7 @@ import ru.mrkurilin.helpDevs.mainScreen.R
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppItem(
+    position: Int,
     appUiModel: AppUiModel,
     changeCanBeDeleted: (appId: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -51,6 +52,12 @@ fun AppItem(
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Text(
+            text = position.toString(),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+
         Column(
             modifier = Modifier
                 .weight(1f),
@@ -95,10 +102,11 @@ fun AppItem(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun AppItemPreview() {
     AppItem(
+        position = 1,
         appUiModel = AppUiModel(
             appName = "appName",
             appId = "com.example.com",
@@ -109,10 +117,11 @@ fun AppItemPreview() {
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun AppItemInstalledPreview() {
     AppItem(
+        position = 1,
         appUiModel = AppUiModel(
             appName = "appName",
             appId = "com.example.com",

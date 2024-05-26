@@ -61,5 +61,7 @@ dependencies {
     implementation(libs.room)
     ksp(libs.roomCompiler)
 
-    api(libs.composeUi)
+    implementation(libs.composeUi)
+
+    implementation(libs.appmetrica)
 }

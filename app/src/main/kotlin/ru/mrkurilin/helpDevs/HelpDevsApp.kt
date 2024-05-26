@@ -1,6 +1,8 @@
 package ru.mrkurilin.helpDevs
 
 import android.app.Application
+import io.appmetrica.analytics.AppMetrica
+import io.appmetrica.analytics.AppMetricaConfig
 import ru.mrkurilin.helpDevs.di.AppComponent
 import ru.mrkurilin.helpDevs.di.DaggerAppComponent
 import ru.mrkurilin.helpDevs.di.SubComponentsProviderImpl
@@ -15,5 +17,11 @@ class HelpDevsApp : Application(), SubComponentsProviderHolder {
 
     override val subComponentsProvider: SubComponentsProvider by lazy {
         SubComponentsProviderImpl(appComponent)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        val config = AppMetricaConfig.newConfigBuilder(API_KEY).build()
+        AppMetrica.activate(this, config)
     }
 }

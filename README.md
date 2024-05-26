@@ -1,7 +1,6 @@
 # HelpDevs
 
-Небольшой проект для отслеживания доступных для установки или удаления приложений,
-выложенных для тестирования из таблицы [Тестировщики Google Play](https://docs.google.com/spreadsheets/d/1mWzPRzr_H480l3s_U8gp7Imh6AuTkHYCMGxNB9qC5EI/edit?usp=sharing)
+Проект для отслеживания доступных для установки или удаления приложений, выложенных для тестировани
 
 **Стэк:** Compose, Dagger 2, OkHttp, Flow, Room
 

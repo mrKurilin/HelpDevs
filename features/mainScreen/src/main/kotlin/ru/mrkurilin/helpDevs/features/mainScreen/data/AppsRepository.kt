@@ -27,28 +27,32 @@ class AppsRepository @Inject constructor(
     suspend fun updateData() {
         val installedAppIds = getInstalledAppIds()
 
-        addRemoteAppsToDb(
-            installedAppIds = installedAppIds,
-        )
-
-        updateAppsInfo(
-            installedAppIds = installedAppIds,
-        )
+        updateAppsInfo(installedAppIds)
+        addRemoteAppsToDb(installedAppIds)
+        updateAppsInfo(installedAppIds)
     }
 
     private suspend fun addRemoteAppsToDb(installedAppIds: List<String>) {
         val remoteApps = appsFetcher.fetchApps()
-        val localAppIds = appsDao.getAllAppIds()
+        val localApps = appsDao.getAllAppsList()
 
-        remoteApps.forEach { remoteAppModel ->
-            if (localAppIds.contains(remoteAppModel.appId)) {
-                return@forEach
-            }
-
+        remoteApps.forEach forEachRemoteApp@{ remoteAppModel ->
             val isAppInstalled = installedAppIds.contains(remoteAppModel.appId)
 
             if (remoteAppModel.canBeDeleted && !isAppInstalled) {
-                return@forEach
+                return@forEachRemoteApp
+            }
+
+            localApps.forEach { localApp ->
+                if (localApp.appId == remoteAppModel.appId) {
+                    val updatedApp = localApp.copy(
+                        appName = remoteAppModel.appName,
+                        canBeDeleted = localApp.canBeDeleted || remoteAppModel.canBeDeleted,
+                        isInstalled = isAppInstalled,
+                    )
+                    appsDao.update(updatedApp)
+                    return@forEachRemoteApp
+                }
             }
 
             val appToAdd = remoteAppModel.copy(isInstalled = isAppInstalled)

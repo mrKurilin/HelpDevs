@@ -5,7 +5,7 @@ import ru.mrkurilin.helpDevs.di.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
 
-class GetInstalledAppName @Inject constructor(
+class GetAppName @Inject constructor(
     @ApplicationContext
     private val context: Context,
 ) {
@@ -13,14 +13,13 @@ class GetInstalledAppName @Inject constructor(
     operator fun invoke(appId: String): String {
         return try {
             val applicationInfo = context.packageManager.getApplicationInfo(appId, 0)
-            if (applicationInfo.nonLocalizedLabel.isNullOrEmpty()) {
+            val label = context.packageManager.getApplicationLabel(applicationInfo).toString()
+
+            label.ifEmpty {
                 getAppNameByAppId(appId)
-            } else {
-                applicationInfo.nonLocalizedLabel.toString()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
-            ""
+            getAppNameByAppId(appId)
         }
     }
 

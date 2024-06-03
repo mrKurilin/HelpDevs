@@ -1,13 +1,14 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.data
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.supervisorScope
 import ru.mrkurilin.helpDevs.di.scopes.AppScope
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppModel
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppsDao
 import ru.mrkurilin.helpDevs.features.mainScreen.data.remote.AppsFetcher
 import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetAppIdFromLink
+import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetAppName
 import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetInstalledAppIds
-import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetInstalledAppName
 import java.util.Date
 import javax.inject.Inject
 
@@ -17,19 +18,21 @@ class AppsRepository @Inject constructor(
     private val appsFetcher: AppsFetcher,
     private val getInstalledAppIds: GetInstalledAppIds,
     private val getAppIdFromLink: GetAppIdFromLink,
-    private val getInstalledAppName: GetInstalledAppName,
+    private val getAppName: GetAppName,
 ) {
 
     fun getApps(): Flow<List<AppModel>> {
         return appsDao.getAllAppsFlow()
     }
 
-    suspend fun updateData() {
+    suspend fun updateData() = supervisorScope {
         val installedAppIds = getInstalledAppIds()
 
-        updateAppsInfo(installedAppIds)
-        addRemoteAppsToDb(installedAppIds)
-        updateAppsInfo(installedAppIds)
+        try {
+            addRemoteAppsToDb(installedAppIds)
+        } finally {
+            updateAppsInfo(installedAppIds)
+        }
     }
 
     private suspend fun addRemoteAppsToDb(installedAppIds: List<String>) {
@@ -46,7 +49,6 @@ class AppsRepository @Inject constructor(
             localApps.forEach { localApp ->
                 if (localApp.appId == remoteAppModel.appId) {
                     val updatedApp = localApp.copy(
-                        appName = remoteAppModel.appName,
                         canBeDeleted = localApp.canBeDeleted || remoteAppModel.canBeDeleted,
                         isInstalled = isAppInstalled,
                     )
@@ -66,19 +68,25 @@ class AppsRepository @Inject constructor(
         appsDao.getAllAppsList().forEach { appModel ->
             val isAppInstalled = installedAppIds.contains(appModel.appId)
 
-            val appName = if (appModel.appName.isEmpty() && isAppInstalled) {
-                getInstalledAppName(appId = appModel.appId)
+            val appName = if (isAppInstalled) {
+                getAppName(appModel.appId)
             } else {
-                appModel.appName
+                appModel.appName.ifEmpty { getAppName(appModel.appId) }
             }
 
-            val installedDate = if (isAppInstalled && appModel.installDate == null) {
-                currentDate.time
+            val installedDate = if (!isAppInstalled) {
+                null
             } else {
-                appModel.installDate
+                appModel.installDate ?: currentDate.time
             }
 
-            if (appModel.appName != appName || appModel.isInstalled != isAppInstalled) {
+            if (
+                appModel.isInstalled != isAppInstalled
+                ||
+                appModel.appName != appName
+                ||
+                appModel.installDate != installedDate
+            ) {
                 appsDao.update(
                     appModel.copy(
                         appName = appName,

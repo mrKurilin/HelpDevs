@@ -16,6 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "HelpDevs"
 include(":app")
 include(":features:mainScreen")
-include(":core:navigation")
 include(":core:di")
-include(":core:ui")

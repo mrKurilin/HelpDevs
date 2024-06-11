@@ -38,11 +38,18 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
+
+    // For KSP
+    applicationVariants.configureEach {
+        kotlin.sourceSets {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/${this@configureEach.name}/kotlin")
+            }
+        }
+    }
 }
 
 dependencies {
-    implementation(project(":core:navigation"))
-    implementation(project(":core:ui"))
     implementation(project(":core:di"))
     implementation(project(":features:mainScreen"))
 
@@ -62,4 +69,8 @@ dependencies {
     ksp(libs.roomCompiler)
 
     implementation(libs.composeUi)
+
+    implementation("io.insert-koin:koin-android:1.3.1")
+    implementation("io.insert-koin:koin-annotations:1.3.1")
+    ksp("io.insert-koin:koin-ksp-compiler:1.3.1")
 }

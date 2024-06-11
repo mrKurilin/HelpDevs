@@ -5,9 +5,8 @@ import ru.mrkurilin.helpDevs.di.AppComponent
 import ru.mrkurilin.helpDevs.di.DaggerAppComponent
 import ru.mrkurilin.helpDevs.di.SubComponentsProviderImpl
 import ru.mrkurilin.helpDevs.di.api.SubComponentsProvider
-import ru.mrkurilin.helpDevs.di.api.SubComponentsProviderHolder
 
-class HelpDevsApp : Application(), SubComponentsProviderHolder {
+class HelpDevsApp : Application() {
 
     private val appComponent: AppComponent by lazy {
         DaggerAppComponent.factory().create(this)

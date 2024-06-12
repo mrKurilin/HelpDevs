@@ -2,7 +2,7 @@ package ru.mrkurilin.helpDevs.features.mainScreen.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.supervisorScope
-import ru.mrkurilin.helpDevs.di.scopes.AppScope
+import org.koin.core.annotation.Single
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppModel
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppsDao
 import ru.mrkurilin.helpDevs.features.mainScreen.data.remote.AppsFetcher
@@ -10,10 +10,9 @@ import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetAppIdFromLink
 import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetAppName
 import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetInstalledAppIds
 import java.util.Date
-import javax.inject.Inject
 
-@AppScope
-class AppsRepository @Inject constructor(
+@Single
+class AppsRepository(
     private val appsDao: AppsDao,
     private val appsFetcher: AppsFetcher,
     private val getInstalledAppIds: GetInstalledAppIds,

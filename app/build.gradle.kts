@@ -47,11 +47,20 @@ android {
             }
         }
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    ksp {
+        arg("KOIN_CONFIG_CHECK","true")
+    }
 }
 
 dependencies {
-    implementation(project(":core:di"))
     implementation(project(":features:mainScreen"))
+
+    implementation(libs.bundles.compose)
 
     implementation(libs.coreKtx)
     implementation(libs.appcompat)
@@ -65,12 +74,16 @@ dependencies {
 
     implementation(libs.coreSplashscreen)
 
+    implementation(libs.roomKtx)
     implementation(libs.room)
     ksp(libs.roomCompiler)
 
     implementation(libs.composeUi)
 
-    implementation("io.insert-koin:koin-android:1.3.1")
+    implementation(libs.junit)
+
+    implementation("io.insert-koin:koin-android:3.5.6")
     implementation("io.insert-koin:koin-annotations:1.3.1")
+    implementation("io.insert-koin:koin-test:3.5.6")
     ksp("io.insert-koin:koin-ksp-compiler:1.3.1")
 }

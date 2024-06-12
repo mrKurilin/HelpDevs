@@ -2,11 +2,10 @@ package ru.mrkurilin.helpDevs.features.mainScreen.data.utils
 
 import android.content.Context
 import android.content.pm.PackageManager
-import ru.mrkurilin.helpDevs.di.qualifiers.ApplicationContext
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetInstalledAppIds @Inject constructor(
-    @ApplicationContext
+@Single
+class GetInstalledAppIds(
     private val context: Context,
 ) {
 

@@ -1,9 +1,10 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.data.utils
 
+import org.koin.core.annotation.Single
 import ru.mrkurilin.helpDevs.features.mainScreen.data.validAppLinkPrefixes
-import javax.inject.Inject
 
-class GetAppIdFromLink @Inject constructor() {
+@Single
+class GetAppIdFromLink {
 
     operator fun invoke(appLink: String): String? {
         val trimmedAppLink = appLink.trim()

@@ -3,7 +3,7 @@ package ru.mrkurilin.helpDevs.features.mainScreen.data.remote
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import org.jsoup.Jsoup
-import ru.mrkurilin.helpDevs.di.scopes.AppScope
+import org.koin.core.annotation.Single
 import ru.mrkurilin.helpDevs.features.mainScreen.data.VALID_GOOGLE_PLAY_LINK_PREFIX
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppModel
 import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetAppIdFromLink
@@ -11,7 +11,6 @@ import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.getTextValue
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
 
 const val GOOGLE_SHEETS_LINK_1 =
@@ -21,8 +20,8 @@ const val GOOGLE_SHEETS_LINK_2 =
 const val GOOGLE_SHEETS_LINK_3 =
     "https://docs.google.com/spreadsheets/d/1UChAxIBu1v4lFtsy2Hl7jeNn_ylGWOBRv9D39QuLyMA"
 
-@AppScope
-class AppsFetcher @Inject constructor(
+@Single
+class AppsFetcher(
     private val getAppIdFromLink: GetAppIdFromLink,
 ) {
 

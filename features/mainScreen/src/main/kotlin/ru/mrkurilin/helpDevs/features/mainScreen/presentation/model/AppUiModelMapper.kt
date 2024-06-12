@@ -1,11 +1,12 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.presentation.model
 
+import org.koin.core.annotation.Single
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppModel
 import java.util.Date
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class AppUiModelMapper @Inject constructor() {
+@Single
+class AppUiModelMapper {
 
     fun mapFromAppModel(appModel: AppModel): AppUiModel {
         val installedDurationDays = if (appModel.isInstalled && appModel.installDate != null) {

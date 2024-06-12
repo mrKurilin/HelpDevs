@@ -2,7 +2,6 @@ package ru.mrkurilin.helpDevs.features.mainScreen.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.mrkurilin.helpDevs.di.qualifiers.IODispatcher
 import ru.mrkurilin.helpDevs.features.mainScreen.data.AppsRepository
 import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.IsAppLinkValid
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.dialogs.MainScreenDialog
@@ -23,14 +21,11 @@ import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenEv
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenState
 import java.lang.CharSequence.compare
 import java.net.UnknownHostException
-import javax.inject.Inject
 
-class MainScreenViewModel @Inject constructor(
+class MainScreenViewModel(
     val isAppLinkValid: IsAppLinkValid = IsAppLinkValid(),
     private val appsRepository: AppsRepository,
     private val appUiModelMapper: AppUiModelMapper,
-    @IODispatcher
-    private val iODispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
@@ -51,7 +46,7 @@ class MainScreenViewModel @Inject constructor(
     val events = Channel<MainScreenEvent>()
 
     init {
-        viewModelScope.launch(iODispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             appsRepository.getApps().combine(state) { appModels, _ ->
                 appModels.map { appUiModelMapper.mapFromAppModel(it) }
             }.collect { appUiModels ->
@@ -64,10 +59,11 @@ class MainScreenViewModel @Inject constructor(
                 }
             }
         }
+        updateData()
     }
 
     fun updateData() {
-        viewModelScope.launch(iODispatcher + coroutineExceptionHandler) {
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             _state.update { currentState ->
                 currentState.copy(
                     isLoading = true,
@@ -117,7 +113,7 @@ class MainScreenViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch(iODispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             appsRepository.addApp(appLink)
             events.send(MainScreenEvent.AddedAppToInstall(appLink))
         }

@@ -33,56 +33,49 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import org.koin.androidx.compose.koinViewModel
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.AppItem
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.EmptyListHolder
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.FilterSortRow
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.MainScreenTopBar
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.dialogs.MainScreenDialog
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.dialogs.MainScreenDialogs
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppsFilter
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppsSort
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenState
+import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenEvent
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(
-    stateFlow: StateFlow<MainScreenState>,
-    updateData: () -> Unit,
-    changeCanBeDeleted: (appId: String) -> Unit,
-    toggleDialogVisibility: (MainScreenDialog) -> Unit,
-    onAddAppClicked: (appLink: String) -> Unit,
-    onTabSelected: (tabIndex: Int) -> Unit,
-    onAppsSortSelected: (AppsSort) -> Unit,
-    onAppsFilterSelected: (AppsFilter) -> Unit,
-    changeSortDirection: () -> Unit,
-    clearFilters: () -> Unit,
-    isAppLinkValid: (String) -> Boolean,
+    handleEvent: (MainScreenEvent) -> Unit,
 ) {
+    val mainScreenViewModel = koinViewModel<MainScreenViewModel>()
+
     val tabs = MainScreenTabs.entries
 
-    val state by stateFlow.collectAsState()
+    val state by mainScreenViewModel.state.collectAsState()
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = state.isLoading,
-        onRefresh = updateData
+        onRefresh = mainScreenViewModel::updateData
     )
+//    LaunchedEffect(){
+//        mainScreenViewModel.events.receiveAsFlow().collect { mainScreenEvent ->
+//            handleEvent(mainScreenEvent)
+//        }
+//    }
 
     Scaffold(
         topBar = {
             MainScreenTopBar(
                 title = stringResource(id = state.selectedTab.titleId),
-                onInfoButtonClick = { toggleDialogVisibility(MainScreenDialog.APP_INFO) },
+                onInfoButtonClick = { mainScreenViewModel.toggleDialogVisibility(MainScreenDialog.APP_INFO) },
             )
         },
         bottomBar = {
             MainScreenTopBar(
                 selectedTabIndex = state.selectedTabIndex,
                 tabs = tabs,
-                onTabSelected = onTabSelected,
+                onTabSelected = mainScreenViewModel::onTabSelected,
             )
         },
         floatingActionButton = {
@@ -94,7 +87,7 @@ fun MainScreen(
                 FloatingActionButton(
                     modifier = Modifier.size(48.dp),
                     shape = CircleShape,
-                    onClick = { toggleDialogVisibility(MainScreenDialog.ADD_APP) },
+                    onClick = { mainScreenViewModel.toggleDialogVisibility(MainScreenDialog.ADD_APP) },
                     elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp)
                 ) {
                     Icon(
@@ -131,10 +124,10 @@ fun MainScreen(
                         exit = shrinkVertically(),
                     ) {
                         FilterSortRow(
-                            onChangeSortDirectionClicked = changeSortDirection,
-                            onSortClicked = { toggleDialogVisibility(MainScreenDialog.APPS_SORT) },
-                            onFilterClicked = { toggleDialogVisibility(MainScreenDialog.APPS_FILTER) },
-                            onClearFilterClicked = clearFilters,
+                            onChangeSortDirectionClicked = mainScreenViewModel::changeSortDirection,
+                            onSortClicked = { mainScreenViewModel.toggleDialogVisibility(MainScreenDialog.APPS_SORT) },
+                            onFilterClicked = { mainScreenViewModel.toggleDialogVisibility(MainScreenDialog.APPS_FILTER) },
+                            onClearFilterClicked = mainScreenViewModel::clearFilters,
                             isDescendingSort = state.isDescendingSort,
                         )
                     }
@@ -156,18 +149,18 @@ fun MainScreen(
                             animationSpec = tween(durationMillis = 600)
                         ),
                         appUiModel = appUiModel,
-                        changeCanBeDeleted = changeCanBeDeleted
+                        changeCanBeDeleted = mainScreenViewModel::changeCanBeDeleted
                     )
                 }
             }
 
             MainScreenDialogs(
                 state = state,
-                toggleDialogVisibility = toggleDialogVisibility,
-                onAddAppClicked = onAddAppClicked,
-                onAppsSortSelected = onAppsSortSelected,
-                onAppsFilterSelected = onAppsFilterSelected,
-                isAppLinkValid = isAppLinkValid,
+                toggleDialogVisibility = mainScreenViewModel::toggleDialogVisibility,
+                onAddAppClicked = mainScreenViewModel::onAddAppClicked,
+                onAppsSortSelected = mainScreenViewModel::onAppsSortSelected,
+                onAppsFilterSelected = mainScreenViewModel::onAppsFilterSelected,
+                isAppLinkValid = {appLink -> mainScreenViewModel.isAppLinkValid(appLink) },
             )
 
             PullRefreshIndicator(
@@ -180,20 +173,10 @@ fun MainScreen(
     }
 }
 
-@Preview
-@Composable
-fun MainScreenPreview() {
-    MainScreen(
-        stateFlow = MutableStateFlow(MainScreenState()),
-        updateData = {},
-        changeCanBeDeleted = {},
-        onAddAppClicked = {},
-        onTabSelected = {},
-        onAppsSortSelected = {},
-        onAppsFilterSelected = {},
-        toggleDialogVisibility = {},
-        changeSortDirection = {},
-        clearFilters = {},
-        isAppLinkValid = { false },
-    )
-}
+//@Preview
+//@Composable
+//fun MainScreenPreview() {
+//    MainScreen(
+//        handleEvent = {},
+//    )
+//}

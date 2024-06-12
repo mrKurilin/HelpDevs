@@ -1,12 +1,11 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.data.utils
 
 import android.content.Context
-import ru.mrkurilin.helpDevs.di.qualifiers.ApplicationContext
+import org.koin.core.annotation.Single
 import java.util.Locale
-import javax.inject.Inject
 
-class GetAppName @Inject constructor(
-    @ApplicationContext
+@Single
+class GetAppName(
     private val context: Context,
 ) {
 

@@ -1,18 +1,20 @@
 package ru.mrkurilin.helpDevs
 
 import android.app.Application
-import ru.mrkurilin.helpDevs.di.AppComponent
-import ru.mrkurilin.helpDevs.di.DaggerAppComponent
-import ru.mrkurilin.helpDevs.di.SubComponentsProviderImpl
-import ru.mrkurilin.helpDevs.di.api.SubComponentsProvider
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import ru.mrkurilin.helpDevs.di.appModule
 
 class HelpDevsApp : Application() {
 
-    private val appComponent: AppComponent by lazy {
-        DaggerAppComponent.factory().create(this)
-    }
+    override fun onCreate() {
+        super.onCreate()
 
-    override val subComponentsProvider: SubComponentsProvider by lazy {
-        SubComponentsProviderImpl(appComponent)
+        startKoin {
+            androidLogger()
+            androidContext(this@HelpDevsApp)
+            modules(appModule)
+        }
     }
 }

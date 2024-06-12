@@ -16,4 +16,3 @@ dependencyResolutionManagement {
 rootProject.name = "HelpDevs"
 include(":app")
 include(":features:mainScreen")
-include(":core:di")

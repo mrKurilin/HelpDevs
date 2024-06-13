@@ -1,12 +1,13 @@
 package ru.mrkurilin.helpDevs.di
 
 import org.koin.dsl.module
-import ru.mrkurilin.helpDevs.features.mainScreen.di.mainScreenModule
+import org.koin.ksp.generated.module
+import ru.mrkurilin.helpDevs.features.mainScreen.di.MainScreenModule
 
 val appModule = module {
 
     includes(
         dataModule,
-        mainScreenModule,
+        MainScreenModule().module,
     )
 }

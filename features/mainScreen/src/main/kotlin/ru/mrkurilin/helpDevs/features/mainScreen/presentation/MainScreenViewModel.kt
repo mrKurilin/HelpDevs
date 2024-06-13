@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import ru.mrkurilin.helpDevs.features.mainScreen.data.AppsRepository
 import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.IsAppLinkValid
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.dialogs.MainScreenDialog
@@ -22,6 +23,7 @@ import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenSt
 import java.lang.CharSequence.compare
 import java.net.UnknownHostException
 
+@KoinViewModel
 class MainScreenViewModel(
     val isAppLinkValid: IsAppLinkValid = IsAppLinkValid(),
     private val appsRepository: AppsRepository,

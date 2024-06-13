@@ -1,24 +1,8 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.di
 
-import org.koin.androidx.viewmodel.dsl.viewModelOf
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.module
-import ru.mrkurilin.helpDevs.features.mainScreen.data.AppsRepository
-import ru.mrkurilin.helpDevs.features.mainScreen.data.remote.AppsFetcher
-import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetAppIdFromLink
-import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetAppName
-import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.GetInstalledAppIds
-import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.IsAppLinkValid
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.MainScreenViewModel
-import ru.mrkurilin.helpDevs.features.mainScreen.presentation.model.AppUiModelMapper
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Module
 
-val mainScreenModule = module {
-    singleOf(::GetAppName)
-    singleOf(::GetInstalledAppIds)
-    singleOf(::AppUiModelMapper)
-    singleOf(::AppsFetcher)
-    singleOf(::AppsRepository)
-    singleOf(::GetAppIdFromLink)
-    singleOf(::IsAppLinkValid)
-    viewModelOf(::MainScreenViewModel)
-}
+@Module
+@ComponentScan("ru.mrkurilin.helpDevs.features.mainScreen")
+class MainScreenModule

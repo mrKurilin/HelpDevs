@@ -61,8 +61,5 @@ dependencies {
     testImplementation(libs.findBundle("tests").get())
     androidTestImplementation(libs.findBundle("androidTests").get())
 
-    implementation(libs.findLibrary("dagger").get())
-    ksp(libs.findLibrary("daggerCompiler").get())
-
     implementation(libs.findLibrary("retrofit").get())
 }

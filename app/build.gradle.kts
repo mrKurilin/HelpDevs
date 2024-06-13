@@ -65,8 +65,6 @@ dependencies {
     implementation(libs.coreKtx)
     implementation(libs.appcompat)
     implementation(libs.navigationFragmentKtx)
-    implementation(libs.dagger)
-    ksp(libs.daggerCompiler)
 
     implementation(libs.kotlinSerializationCore)
     implementation(libs.kotlinSerializationJson)

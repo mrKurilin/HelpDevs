@@ -15,7 +15,6 @@ legacy-support-v4 = "1.0.0"
 lifecycle-livedata-ktx = "2.7.0"
 kotlinSerialization = "1.6.1"
 ksp = "1.9.23-1.0.20"
-dagger = "2.51.1"
 retrofit = "2.9.0"
 room = "2.6.1"
 jsoup = "1.14.3"
@@ -78,9 +77,6 @@ kotlinSerializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-ser
 kotlinSerializationPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
 
 kspGradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-
-dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
-daggerCompiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 okHttp = { group = "com.squareup.okhttp3", name = "okhttp", version = "5.0.0-alpha.11" }

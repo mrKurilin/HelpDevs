@@ -27,13 +27,16 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.koin.androidx.compose.koinViewModel
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.AppItem
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.components.EmptyListHolder
@@ -58,17 +61,20 @@ fun MainScreen(
         refreshing = state.isLoading,
         onRefresh = mainScreenViewModel::updateData
     )
-//    LaunchedEffect(){
-//        mainScreenViewModel.events.receiveAsFlow().collect { mainScreenEvent ->
-//            handleEvent(mainScreenEvent)
-//        }
-//    }
+
+    LaunchedEffect(LocalLifecycleOwner.current) {
+        mainScreenViewModel.events.receiveAsFlow().collect { mainScreenEvent ->
+            handleEvent(mainScreenEvent)
+        }
+    }
 
     Scaffold(
         topBar = {
             MainScreenTopBar(
                 title = stringResource(id = state.selectedTab.titleId),
-                onInfoButtonClick = { mainScreenViewModel.toggleDialogVisibility(MainScreenDialog.APP_INFO) },
+                onInfoButtonClick = {
+                    mainScreenViewModel.toggleDialogVisibility(MainScreenDialog.APP_INFO)
+                },
             )
         },
         bottomBar = {
@@ -125,8 +131,16 @@ fun MainScreen(
                     ) {
                         FilterSortRow(
                             onChangeSortDirectionClicked = mainScreenViewModel::changeSortDirection,
-                            onSortClicked = { mainScreenViewModel.toggleDialogVisibility(MainScreenDialog.APPS_SORT) },
-                            onFilterClicked = { mainScreenViewModel.toggleDialogVisibility(MainScreenDialog.APPS_FILTER) },
+                            onSortClicked = {
+                                mainScreenViewModel.toggleDialogVisibility(
+                                    MainScreenDialog.APPS_SORT
+                                )
+                            },
+                            onFilterClicked = {
+                                mainScreenViewModel.toggleDialogVisibility(
+                                    MainScreenDialog.APPS_FILTER
+                                )
+                            },
                             onClearFilterClicked = mainScreenViewModel::clearFilters,
                             isDescendingSort = state.isDescendingSort,
                         )
@@ -160,7 +174,7 @@ fun MainScreen(
                 onAddAppClicked = mainScreenViewModel::onAddAppClicked,
                 onAppsSortSelected = mainScreenViewModel::onAppsSortSelected,
                 onAppsFilterSelected = mainScreenViewModel::onAppsFilterSelected,
-                isAppLinkValid = {appLink -> mainScreenViewModel.isAppLinkValid(appLink) },
+                isAppLinkValid = { appLink -> mainScreenViewModel.isAppLinkValid(appLink) },
             )
 
             PullRefreshIndicator(

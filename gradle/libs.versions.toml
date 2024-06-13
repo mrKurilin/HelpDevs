@@ -92,8 +92,6 @@ roomCompiler = { group = "androidx.room", name = "room-compiler", version.ref = 
 
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 
-appmetrica = { group = "io.appmetrica.analytics", name = "analytics", version.ref = "appmetrica" }
-
 [bundles]
 ktor = ["ktor-okhttp", "ktor-negotiation", "ktor-serialization", "ktor-logging"]
 tests = ["junit", "mockk", "coroutinesTest", "turbine"]

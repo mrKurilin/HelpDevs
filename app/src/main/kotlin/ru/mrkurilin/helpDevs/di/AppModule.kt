@@ -5,5 +5,8 @@ import ru.mrkurilin.helpDevs.features.mainScreen.di.mainScreenModule
 
 val appModule = module {
 
-    includes(mainScreenModule)
+    includes(
+        dataModule,
+        mainScreenModule,
+    )
 }

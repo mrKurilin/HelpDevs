@@ -4,5 +4,6 @@ const val VALID_GOOGLE_PLAY_LINK_PREFIX = "https://play.google.com/store/apps/de
 
 val validAppLinkPrefixes = listOf(
     VALID_GOOGLE_PLAY_LINK_PREFIX,
-    "https://play.google.com/apps/testing/"
+    "https://play.google.com/apps/testing/",
+    "https://play.google.com/apps/details",
 )

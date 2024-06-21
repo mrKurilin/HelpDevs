@@ -11,15 +11,20 @@ import androidx.compose.material.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.MainScreen
 import ru.mrkurilin.helpDevs.features.mainScreen.presentation.state.MainScreenEvent
 import ru.mrkurilin.helpDevs.mainScreen.R
 
 class MainActivity : AppCompatActivity() {
 
+    private val mainViewModel by viewModel<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        mainViewModel.startPolling()
 
         setContent {
             Surface(
@@ -57,5 +62,10 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainViewModel.stopPolling()
     }
 }

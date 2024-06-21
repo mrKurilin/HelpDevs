@@ -1,8 +1,15 @@
+import java.util.*
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
 }
+
+val properties = Properties().apply {
+    rootProject.file("local.properties").reader().use(::load)
+}
+val TLG_BOT_TOKEN = properties["TLG_BOT_TOKEN"] as String
 
 android {
     compileSdk = 34
@@ -16,7 +23,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "TLG_BOT_TOKEN", TLG_BOT_TOKEN)
+        }
         release {
+            buildConfigField("String", "TLG_BOT_TOKEN", TLG_BOT_TOKEN)
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -50,6 +61,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     ksp {
@@ -84,4 +96,6 @@ dependencies {
     implementation("io.insert-koin:koin-annotations:1.3.1")
     implementation("io.insert-koin:koin-test:3.5.6")
     ksp("io.insert-koin:koin-ksp-compiler:1.3.1")
+
+    implementation(libs.telegramBot)
 }

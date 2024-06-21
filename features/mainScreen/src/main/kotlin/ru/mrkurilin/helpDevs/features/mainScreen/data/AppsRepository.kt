@@ -105,6 +105,8 @@ class AppsRepository(
     suspend fun addApp(appLink: String) {
         val appId = getAppIdFromLink(appLink) ?: return
 
+        val validAppLink = VALID_GOOGLE_PLAY_LINK_PREFIX + appId
+
         if (appsDao.getAppModelById(appId) != null) {
             return
         }
@@ -113,7 +115,7 @@ class AppsRepository(
             AppModel(
                 appName = "",
                 appId = appId,
-                appLink = appLink,
+                appLink = validAppLink,
                 canBeDeleted = false,
             )
         )

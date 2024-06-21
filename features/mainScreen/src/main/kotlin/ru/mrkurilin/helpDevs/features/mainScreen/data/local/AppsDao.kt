@@ -1,6 +1,7 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.data.local
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -27,4 +28,7 @@ interface AppsDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(appModel: AppModel)
+
+    @Delete
+    suspend fun deleteApp(appModel: AppModel)
 }

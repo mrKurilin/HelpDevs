@@ -113,7 +113,7 @@ fun AppItemPreview() {
             appLink = "",
             canBeDeleted = false,
         ),
-        changeCanBeDeleted = { }
+        changeCanBeDeleted = {},
     )
 }
 
@@ -130,6 +130,6 @@ fun AppItemInstalledPreview() {
             canBeDeleted = false,
             appInstalledDurationDays = 4,
         ),
-        changeCanBeDeleted = { }
+        changeCanBeDeleted = {},
     )
 }

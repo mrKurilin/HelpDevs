@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.koin.androidx.compose.koinViewModel
@@ -163,7 +164,7 @@ fun MainScreen(
                             animationSpec = tween(durationMillis = 600)
                         ),
                         appUiModel = appUiModel,
-                        changeCanBeDeleted = mainScreenViewModel::changeCanBeDeleted
+                        changeCanBeDeleted = mainScreenViewModel::changeCanBeDeleted,
                     )
                 }
             }
@@ -187,10 +188,10 @@ fun MainScreen(
     }
 }
 
-//@Preview
-//@Composable
-//fun MainScreenPreview() {
-//    MainScreen(
-//        handleEvent = {},
-//    )
-//}
+@Preview
+@Composable
+fun MainScreenPreview() {
+    MainScreen(
+        handleEvent = {},
+    )
+}

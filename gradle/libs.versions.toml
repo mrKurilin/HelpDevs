@@ -22,6 +22,7 @@ glide = "4.16.0"
 activityCompose = "1.9.0"
 junit = "4.13.2"
 appmetrica = "6.5.0"
+telegramBot = "6.1.0"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -91,6 +92,8 @@ roomKtx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 roomCompiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
+
+telegramBot = { module = "io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram", version.ref = "telegramBot" }
 
 [bundles]
 ktor = ["ktor-okhttp", "ktor-negotiation", "ktor-serialization", "ktor-logging"]

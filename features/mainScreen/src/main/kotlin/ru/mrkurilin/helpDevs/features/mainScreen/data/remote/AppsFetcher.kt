@@ -1,7 +1,8 @@
 package ru.mrkurilin.helpDevs.features.mainScreen.data.remote
 
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.koin.core.annotation.Single
 import ru.mrkurilin.helpDevs.features.mainScreen.data.VALID_GOOGLE_PLAY_LINK_PREFIX
@@ -11,14 +12,16 @@ import ru.mrkurilin.helpDevs.features.mainScreen.data.utils.getTextValue
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.coroutines.coroutineContext
 
 const val GOOGLE_SHEETS_LINK_1 =
     "https://docs.google.com/spreadsheets/d/17hPaWcE07hKxRRadfUU-R5dz-LBp8JQV9Mpct7J1-uw"
-const val GOOGLE_SHEETS_LINK_2 =
-    "https://docs.google.com/spreadsheets/d/1tfd7bTi9oFo3r3PR8Gomw9lHlD_NYxUsVvMO3X_mQCo"
-const val GOOGLE_SHEETS_LINK_3 =
-    "https://docs.google.com/spreadsheets/d/1UChAxIBu1v4lFtsy2Hl7jeNn_ylGWOBRv9D39QuLyMA"
+
+val GOOGLE_SHEETS = listOf(
+    GOOGLE_SHEETS_LINK_1,
+    "https://docs.google.com/spreadsheets/d/1tfd7bTi9oFo3r3PR8Gomw9lHlD_NYxUsVvMO3X_mQCo",
+    "https://docs.google.com/spreadsheets/d/1UChAxIBu1v4lFtsy2Hl7jeNn_ylGWOBRv9D39QuLyMA",
+    "https://docs.google.com/spreadsheets/d/1zp5lqAxqY7rMnRliECw3uqdA55MEoVvfGfY07lx57zI",
+)
 
 @Single
 class AppsFetcher(
@@ -27,28 +30,26 @@ class AppsFetcher(
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
-    suspend fun fetchApps(): List<AppModel> {
-        return with(CoroutineScope(coroutineContext)) {
-            val appModelsCanBeInstalled = async {
-                getAppModelsCanBeInstalled()
-            }
-            val appModelsCanBeDeleted1 = async {
-                getAppModelsCanBeDeleted(GOOGLE_SHEETS_LINK_1)
-            }
-            val appModelsCanBeDeleted2 = async {
-                getAppModelsCanBeDeleted(GOOGLE_SHEETS_LINK_2)
-            }
-            val appModelsCanBeDeleted3 = async {
-                getAppModelsCanBeDeleted(GOOGLE_SHEETS_LINK_3)
-            }
+    suspend fun fetchApps(): List<AppModel> = withContext(Dispatchers.IO) {
+        val remoteApps = mutableListOf<AppModel>()
 
-            mutableListOf<AppModel>().apply {
-                addAll(appModelsCanBeInstalled.await())
-                addAll(appModelsCanBeDeleted1.await())
-                addAll(appModelsCanBeDeleted2.await())
-                addAll(appModelsCanBeDeleted3.await())
+        val appModelsCanBeInstalled = async {
+            getAppModelsCanBeInstalled()
+        }
+
+        val appModelsCanBeDeletedAsynced = GOOGLE_SHEETS.map { googleSheetLink ->
+            async {
+                getAppModelsCanBeDeleted(googleSheetLink)
             }
         }
+
+        remoteApps.addAll(appModelsCanBeInstalled.await())
+
+        appModelsCanBeDeletedAsynced.forEach { deferredList ->
+            remoteApps.addAll(deferredList.await())
+        }
+
+        return@withContext remoteApps
     }
 
     private fun getAppModelsCanBeInstalled(): List<AppModel> {
@@ -70,7 +71,7 @@ class AppsFetcher(
                 false
             }
 
-            getAppModel(
+            createAppModel(
                 appName = columns[3].getTextValue(),
                 appLink = columns[4].getTextValue(),
                 canBeDeleted = canBeDeletedAlready,
@@ -93,7 +94,7 @@ class AppsFetcher(
                 return@forEach
             }
 
-            getAppModel(
+            createAppModel(
                 appName = columns[0].getTextValue(),
                 appLink = columns[1].getTextValue(),
                 canBeDeleted = true,
@@ -105,7 +106,7 @@ class AppsFetcher(
         return appModels
     }
 
-    private fun getAppModel(
+    private fun createAppModel(
         appName: String,
         appLink: String,
         canBeDeleted: Boolean,

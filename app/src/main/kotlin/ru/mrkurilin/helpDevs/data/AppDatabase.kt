@@ -5,7 +5,10 @@ import androidx.room.RoomDatabase
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppModel
 import ru.mrkurilin.helpDevs.features.mainScreen.data.local.AppsDao
 
-@Database(entities = [AppModel::class], version = 1)
+@Database(
+    entities = [AppModel::class],
+    version = 2,
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun appsDao(): AppsDao

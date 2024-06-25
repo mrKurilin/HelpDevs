@@ -29,7 +29,11 @@ class MainViewModel(
                 token = botToken
                 dispatch {
                     text {
-                        handleReceivedText(message.text?.replace("\n", " ").toString())
+                        val text = message.text?.replace("\n", " ") ?: return@text
+                        handleReceivedText(
+                            text = text,
+                            ownerTlgUserName = message.forwardFrom?.username,
+                        )
                     }
                 }
             }
@@ -45,9 +49,15 @@ class MainViewModel(
         }
     }
 
-    private suspend fun handleReceivedText(text: String) {
+    private suspend fun handleReceivedText(
+        text: String,
+        ownerTlgUserName: String?,
+    ) {
         text.split(" ").filter { isAppLinkValid(it) }.forEach { appLink ->
-            appsRepository.addApp(appLink.trim())
+            appsRepository.addAppFromTlg(
+                appLink = appLink.trim(),
+                ownerTlgUserName = ownerTlgUserName,
+            )
         }
     }
 }

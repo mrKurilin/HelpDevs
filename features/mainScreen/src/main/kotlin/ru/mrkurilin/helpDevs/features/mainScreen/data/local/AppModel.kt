@@ -12,4 +12,5 @@ data class AppModel(
     val canBeDeleted: Boolean,
     val installDate: Long? = null,
     val isInstalled: Boolean = false,
+    val ownerTlgUserName: String? = null,
 )

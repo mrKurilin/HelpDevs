@@ -111,13 +111,36 @@ class AppsRepository(
             return
         }
 
-        appsDao.add(
-            AppModel(
-                appName = "",
-                appId = appId,
+        val appModel = AppModel(
+            appName = "",
+            appId = appId.lowercase(),
+            appLink = validAppLink,
+            canBeDeleted = false,
+        )
+        appsDao.add(appModel)
+    }
+
+    suspend fun addAppFromTlg(
+        appLink: String,
+        ownerTlgUserName: String?,
+    ) {
+        val appId = getAppIdFromLink(appLink) ?: return
+
+        val validAppLink = VALID_GOOGLE_PLAY_LINK_PREFIX + appId
+
+        val appModelById = appsDao.getAppModelById(appId)
+
+        if (appModelById != null) {
+            appsDao.update(appModelById.copy(ownerTlgUserName = ownerTlgUserName))
+        } else {
+            val appModel = AppModel(
+                appName = getAppName(appId),
+                appId = appId.lowercase(),
                 appLink = validAppLink,
                 canBeDeleted = false,
+                ownerTlgUserName = ownerTlgUserName,
             )
-        )
+            appsDao.add(appModel)
+        }
     }
 }
